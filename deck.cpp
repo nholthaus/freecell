@@ -60,8 +60,8 @@ void Deck::build(Board* board)
 {
     mCards.clear();
 
-    for (cardcolor i = HEARTS; i<= CLUBS; i++) {
-        for (cardvalue j = ACE; j <= KING; j++) {
+    for (CardColor i = HEARTS; i<= CLUBS; ++i) {
+        for (CardValue j = ACE; j <= KING; ++j) {
             pushCard(new Card(i, j, board));
         }
     }

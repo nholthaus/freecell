@@ -22,8 +22,22 @@
 
 #include "abstractcardholder.h"
 
-enum cardvalue {ACE=1, JACK=11, QUEEN=12, KING=13};
-enum cardcolor {HEARTS=1, DIAMONDS=2, SPADES=3, CLUBS=4};
+enum CardValue : int {ACE=1, JACK=11, QUEEN=12, KING=13, LASTVALUE};
+enum CardColor : int {HEARTS=1, DIAMONDS=2, SPADES=3, CLUBS=4, LASTCOLOR};
+
+inline CardValue & operator++(CardValue & value) {
+  if (value < LASTVALUE) {
+    value = static_cast<CardValue>(static_cast<int>(value) + 1);
+  }
+  return value;
+}
+
+inline CardColor & operator++(CardColor & color) {
+  if (color < LASTCOLOR) {
+    color = static_cast<CardColor>(static_cast<int>(color) + 1);
+  }
+  return color;
+}
 
 class CardWidget;
 class CardProxy;
@@ -37,7 +51,7 @@ class Card : public AbstractCardHolder
 {
     Q_OBJECT
 public:
-    Card(cardcolor color, cardvalue value, Board* board);
+    Card(CardColor color, CardValue value, Board* board);
 
     void setParent(AbstractCardHolder*, bool = false);
     int countChildren();
@@ -53,8 +67,8 @@ public:
     QString getColorName();
     QString getLabel();
 
-    cardvalue getValue();
-    cardcolor getColor();
+    CardValue getValue();
+    CardColor getColor();
     char getBlackRedColor();
 
     QPoint getPosition();
@@ -77,8 +91,8 @@ public slots:
     void resetZIndex();
 
 protected:
-    cardcolor mColor;
-    cardvalue mValue;
+  CardColor mColor;
+    CardValue mValue;
 
     Board* mBoard;
     CardWidget* mWidget;

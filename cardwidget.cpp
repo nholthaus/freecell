@@ -25,7 +25,7 @@ CardWidget::CardWidget(QWidget *parent) :
 
 
     QHBoxLayout *hLayout = new QHBoxLayout();
-    hLayout->setMargin(0);
+    hLayout->setContentsMargins(0, 0, 0, 0);
     hLayout->addWidget(mLabel);
 
     mColorLabel = new QLabel(this);
@@ -34,7 +34,7 @@ CardWidget::CardWidget(QWidget *parent) :
 
     QVBoxLayout *vLayout = new QVBoxLayout();
     vLayout->addLayout(hLayout);
-    vLayout->setMargin(10);
+    vLayout->setContentsMargins(10, 10, 10, 10);
 
     mBigColorLabel = new QLabel(this);
     mBigColorLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
@@ -52,7 +52,7 @@ void CardWidget::setText(QString text)
     mLabel->setWordWrap(true);
 }
 
-void CardWidget::setColor(cardcolor color)
+void CardWidget::setColor(CardColor color)
 {
     QString resource;
     switch (color) {

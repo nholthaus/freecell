@@ -29,7 +29,7 @@ public:
     CardWidget(QWidget *parent = 0);
 
     void setText(QString);
-    void setColor(cardcolor color);
+    void setColor(CardColor color);
 
     const static int WIDTH = 140;
     const static int HEIGHT = 230;

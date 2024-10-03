@@ -31,7 +31,7 @@
  * \param value The value of the card
  * \param board The board of the game
  */
-Card::Card(cardcolor color, cardvalue value, Board* board) : AbstractCardHolder()
+Card::Card(CardColor color, CardValue value, Board* board) : AbstractCardHolder()
 {
     mChild = 0;
     mColor = color;
@@ -216,12 +216,12 @@ QString Card::getColorName()
     return colorName;
 }
 
-cardvalue Card::getValue()
+CardValue Card::getValue()
 {
     return mValue;
 }
 
-cardcolor Card::getColor()
+CardColor Card::getColor()
 {
     return mColor;
 }
