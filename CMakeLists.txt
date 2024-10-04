@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find required Qt modules
-set(CMAKE_PREFIX_PATH  )
+set(CMAKE_PREFIX_PATH $ENV{Qt6_DIR})
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core)
 qt_standard_project_setup()
 

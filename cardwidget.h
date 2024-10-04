@@ -25,32 +25,30 @@
 class CardWidget : public QFrame
 {
 	Q_OBJECT
-protected:
+public:
 
-	void paintEvent(QPaintEvent* event) override;
+	constexpr static int WIDTH		   = 150;
+	constexpr static int HEIGHT		   = 210;
+	constexpr static int BORDER_RADIUS = 15;
+	constexpr static int MARGIN		   = 5;
 
 public:
 
 	explicit CardWidget(QWidget* parent = nullptr);
-
 	void setCard(Card::Value value, Card::Suit suit);
-
-	constexpr static int WIDTH	= 150;
-	constexpr static int HEIGHT = 210;
-	constexpr static int BORDER_RADIUS = 15;
-	constexpr static int MARGIN = 5;
-
-protected:
-public:
 
 	[[nodiscard]] Card::Value value() const noexcept;
 	[[nodiscard]] Card::Suit  suit() const noexcept;
 
 protected:
 
+	void paintEvent(QPaintEvent* event) override;
+
+protected:
+
 	Card::Value m_value;
-	Card::Suit  m_suit;
-	QPixmap m_backgroundImage;
+	Card::Suit	m_suit;
+	QPixmap		m_backgroundImage;
 };
 
 #endif // CARDWIDGET_H

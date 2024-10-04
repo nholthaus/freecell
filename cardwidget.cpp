@@ -42,7 +42,6 @@ void CardWidget::setCard(Card::Value value, Card::Suit suit)
 		valueName = QString::number(value);
 
 	QString resource = QString(":/cards/%1/%2").arg(QMetaEnum::fromType<Card::Suit>().valueToKey(suit)).arg(valueName);
-	qDebug() << resource;
 	this->setStyleSheet(QString("background-color: transparent; border-image: url(%1); margin: %2px;").arg(resource).arg(MARGIN));
 }
 
@@ -70,8 +69,21 @@ void CardWidget::paintEvent(QPaintEvent* event)
 	// Clip the content outside the rounded corners
 	painter.setClipPath(path);
 
+	// Load the background image
+	QPixmap backgroundImage(":/images/card"); // Replace with your image path
+
+	// Check if the image was loaded successfully
+	if (backgroundImage.isNull())
+	{
+		qWarning("Failed to load background image.");
+	}
+
+	// Create a QBrush with the background image
+	QBrush backgroundBrush(backgroundImage);
+	backgroundBrush.setStyle(Qt::TexturePattern); // Set the brush to tile the image
+
 	// Step 1: Fill the background with white
-	painter.fillPath(path, Qt::white);
+	painter.fillPath(path, backgroundBrush);
 
 	// Step 2: Draw the border image (assuming 9-slice scaling for borders)
 	QStyleOptionFrame opt;
@@ -79,7 +91,7 @@ void CardWidget::paintEvent(QPaintEvent* event)
 	style()->drawPrimitive(QStyle::PE_Frame, &opt, &painter, this);
 
 	// Step 4: Draw a 1px black border
-	QPen pen(Qt::black, 1);  // 1px black border
+	QPen pen(Qt::darkGray, 1);  // 1px black border
 	painter.setPen(pen);
 	painter.drawPath(path);
 
