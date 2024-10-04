@@ -22,23 +22,23 @@
  */
 AbstractCardHolder::AbstractCardHolder()
 {
-    mParent = 0;
-    mChild = 0;
+	m_parent = 0;
+	m_child	 = 0;
 }
 
 AbstractCardHolder* AbstractCardHolder::getParent()
 {
-    return mParent;
+    return m_parent;
 }
 
 void AbstractCardHolder::setChild(Card* card)
 {
-    mChild = card;
+	m_child = card;
 }
 
 Card* AbstractCardHolder::getChild()
 {
-    return mChild;
+    return m_child;
 }
 
 int AbstractCardHolder::getZIndex()

@@ -22,86 +22,109 @@
 
 #include "abstractcardholder.h"
 
-enum CardValue : int {ACE=1, JACK=11, QUEEN=12, KING=13, LASTVALUE};
-enum CardColor : int {HEARTS=1, DIAMONDS=2, SPADES=3, CLUBS=4, LASTCOLOR};
-
-inline CardValue & operator++(CardValue & value) {
-  if (value < LASTVALUE) {
-    value = static_cast<CardValue>(static_cast<int>(value) + 1);
-  }
-  return value;
-}
-
-inline CardColor & operator++(CardColor & color) {
-  if (color < LASTCOLOR) {
-    color = static_cast<CardColor>(static_cast<int>(color) + 1);
-  }
-  return color;
-}
-
 class CardWidget;
 class CardProxy;
 class Board;
-class QPixmap;
 
 /*!
  * \brief A Card
  */
 class Card : public AbstractCardHolder
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    Card(CardColor color, CardValue value, Board* board);
 
-    void setParent(AbstractCardHolder*, bool = false);
-    int countChildren();
+	enum Value : int
+	{
+		ACE	  = 1,
+		JACK  = 11,
+		QUEEN = 12,
+		KING  = 13,
+		LASTVALUE
+	};
+	Q_ENUM(Value)
 
-    bool canStackCard(Card*);
-    bool isStackable();
-    bool isMovable();
-    bool isValidParentOf(Card*);
-    void setOnAceSpot(bool);
-    bool isOnAceSpot();
+	enum Suit : int
+	{
+		HEARTS	 = 1,
+		DIAMONDS = 2,
+		SPADES	 = 3,
+		CLUBS	 = 4,
+		LASTSUIT
+	};
+	Q_ENUM(Suit)
 
-    QString getValueName();
-    QString getColorName();
-    QString getLabel();
+public:
 
-    CardValue getValue();
-    CardColor getColor();
-    char getBlackRedColor();
+	Card(Suit suit, Value value, Board* board);
 
-    QPoint getPosition();
-    QPoint getChildPosition();
-    void animatePosition(QPoint pos);
-    void setPosition(QPoint pos);
-    void updatePosition(bool animate = false);
-    int getTopZIndex();
-    int getZIndex();
-    void setZIndex(int index, bool cascade = true);
-    void hide();
-    void show();
+	void setParent(AbstractCardHolder*, bool = false);
+	int	 countChildren();
 
-    void select();
-    bool isSelected();
-    void setSelected(bool selected);
-    void automaticMove();
+	bool canStackCard(Card*) override;
+	bool isStackable() override;
+	bool isMovable();
+	bool isValidParentOf(Card*);
+	void setOnAceSpot(bool);
+	bool isOnAceSpot();
+
+	QString getValueName();
+	QString getSuitName();
+	QString getLabel();
+
+	Value getValue();
+	Suit  getSuit();
+	char  getBlackRedColor();
+
+	QPoint getPosition();
+	QPoint getChildPosition() override;
+	void   animatePosition(QPoint pos);
+	void   setPosition(QPoint pos);
+	void   updatePosition(bool animate = false);
+	int	   getTopZIndex();
+	int	   getZIndex() override;
+	void   setZIndex(int index, bool cascade = true);
+	void   hide();
+	void   show();
+
+	void select() override;
+	bool isSelected();
+	void setSelected(bool selected);
+	void automaticMove();
 
 public slots:
-    void resetZIndex();
+	void resetZIndex();
 
 protected:
-  CardColor mColor;
-    CardValue mValue;
 
-    Board* mBoard;
-    CardWidget* mWidget;
-    CardProxy* mProxy;
+	Suit  m_suit;
+	Value m_value;
 
-    QPoint mPosition;
-    bool mSelected;
+	Board*		m_board;
+	CardWidget* m_widget;
+	CardProxy*	m_proxy;
 
-    bool mIsOnAceSpot;
+	QPoint m_position;
+	bool   m_selected;
 
+	bool m_isOnAceSpot;
 };
+
+inline Card::Value& operator++(Card::Value& value)
+{
+	if (value < Card::Value::LASTVALUE)
+	{
+		value = static_cast<Card::Value>(static_cast<int>(value) + 1);
+	}
+	return value;
+}
+
+inline Card::Suit& operator++(Card::Suit& color)
+{
+	if (color < Card::Suit::LASTSUIT)
+	{
+		color = static_cast<Card::Suit>(static_cast<int>(color) + 1);
+	}
+	return color;
+}
 #endif // CARD_H

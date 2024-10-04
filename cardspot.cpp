@@ -37,7 +37,7 @@ CardSpot::CardSpot(Board* board) : AbstractCardHolder()
  */
 bool CardSpot::isEmpty()
 {
-    return mChild == 0;
+    return m_child == 0;
 }
 
 /*!

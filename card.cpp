@@ -16,38 +16,39 @@
  */
 
 #include "card.h"
-#include "cardwidget.h"
-#include "cardproxy.h"
 #include "board.h"
+#include "cardproxy.h"
+#include "cardwidget.h"
 
 #include <QPropertyAnimation>
 
+#include <QMetaEnum>
 #include <iostream>
 #include <sstream>
 
 /*!
  * \brief Constructor
- * \param color The color of the card
+ * \param suit The suit of the card
  * \param value The value of the card
  * \param board The board of the game
  */
-Card::Card(CardColor color, CardValue value, Board* board) : AbstractCardHolder()
+Card::Card(Suit suit, Value value, Board* board)
+	: AbstractCardHolder()
 {
-    mChild = 0;
-    mColor = color;
-    mValue = value;
-    mBoard = board;
-    mIsOnAceSpot = false;
-    mSelected = false;
+	m_child		  = 0;
+	m_suit		  = suit;
+	m_value		  = value;
+	m_board		  = board;
+	m_isOnAceSpot = false;
+	m_selected	  = false;
 
-    mWidget = new CardWidget();
-    mWidget->setText(getLabel());
-    mWidget->setColor(getColor());
-    setSelected(false);
+	m_widget = new CardWidget();
+	m_widget->setCard(value, suit);
+	setSelected(false);
 
-    mProxy = new CardProxy(this);
-    mProxy->setWidget(mWidget);
-    mBoard->addItem(mProxy);
+	m_proxy = new CardProxy(this);
+	m_proxy->setWidget(m_widget);
+	m_board->addItem(m_proxy);
 }
 
 /*!
@@ -56,7 +57,7 @@ Card::Card(CardColor color, CardValue value, Board* board) : AbstractCardHolder(
  */
 QString Card::getLabel()
 {
-    return getValueName();
+	return getValueName();
 }
 
 /*!
@@ -66,15 +67,17 @@ QString Card::getLabel()
  */
 void Card::setParent(AbstractCardHolder* parent, bool animate)
 {
-    if (mParent) {
-        mParent->setChild(0);
-    }
-    mParent = parent;
-    if (mParent) {
-        mParent->setChild(this);
-        updatePosition(animate);
-        mBoard->unselectCard();
-    }
+	if (m_parent)
+	{
+		m_parent->setChild(nullptr);
+	}
+	m_parent = parent;
+	if (m_parent)
+	{
+		m_parent->setChild(this);
+		updatePosition(animate);
+		m_board->unselectCard();
+	}
 }
 
 /*!
@@ -83,10 +86,11 @@ void Card::setParent(AbstractCardHolder* parent, bool animate)
  */
 int Card::countChildren()
 {
-    if (mChild == 0) {
-        return 0;
-    }
-    return mChild->countChildren() + 1;
+	if (m_child == 0)
+	{
+		return 0;
+	}
+	return m_child->countChildren() + 1;
 }
 
 /*!
@@ -96,7 +100,7 @@ int Card::countChildren()
  */
 bool Card::canStackCard(Card* card)
 {
-    return isStackable() && getChild() == 0 && card->isMovable() && isValidParentOf(card);
+	return isStackable() && getChild() == 0 && card->isMovable() && isValidParentOf(card);
 }
 
 /*!
@@ -105,7 +109,7 @@ bool Card::canStackCard(Card* card)
  */
 bool Card::isStackable()
 {
-    return mParent->isStackable();
+	return m_parent->isStackable();
 }
 
 /*!
@@ -114,13 +118,15 @@ bool Card::isStackable()
  */
 bool Card::isMovable()
 {
-    if (mIsOnAceSpot) {
-        return false;
-    }
-    if (mChild == 0) {
-        return true;
-    }
-    return isValidParentOf(mChild) && mChild->isMovable() && mBoard->hasEnoughFreecells(countChildren() + 1);
+	if (m_isOnAceSpot)
+	{
+		return false;
+	}
+	if (m_child == 0)
+	{
+		return true;
+	}
+	return isValidParentOf(m_child) && m_child->isMovable() && m_board->hasEnoughFreecells(countChildren() + 1);
 }
 
 /*!
@@ -130,13 +136,15 @@ bool Card::isMovable()
  */
 bool Card::isValidParentOf(Card* card)
 {
-    if (card == 0) {
-        return true;
-    }
-    if (mIsOnAceSpot) {
-        return getValue() - card->getValue() == -1 && card->getColor() == getColor();
-    }
-    return getValue() - card->getValue() == 1 && card->getBlackRedColor() != getBlackRedColor();
+	if (card == 0)
+	{
+		return true;
+	}
+	if (m_isOnAceSpot)
+	{
+		return getValue() - card->getValue() == -1 && card->getSuit() == getSuit();
+	}
+	return getValue() - card->getValue() == 1 && card->getBlackRedColor() != getBlackRedColor();
 }
 
 /*!
@@ -147,7 +155,7 @@ bool Card::isValidParentOf(Card* card)
  */
 void Card::setOnAceSpot(bool on)
 {
-    mIsOnAceSpot = on;
+	m_isOnAceSpot = on;
 }
 
 /*!
@@ -156,7 +164,7 @@ void Card::setOnAceSpot(bool on)
  */
 bool Card::isOnAceSpot()
 {
-    return mIsOnAceSpot;
+	return m_isOnAceSpot;
 }
 
 /*!
@@ -165,65 +173,49 @@ bool Card::isOnAceSpot()
  */
 QString Card::getValueName()
 {
-    QString cardValue = "";
+	QString cardValue = "";
 
-    switch (mValue) {
-    case ACE:
-        cardValue = "ACE";
-        break;
-    case JACK:
-        cardValue = "JACK";
-        break;
-    case QUEEN:
-        cardValue = "QUEEN";
-        break;
-    case KING:
-        cardValue = "KING";
-        break;
-    default:
-        std::stringstream ss;
-        ss << mValue;
-        cardValue = ss.str().c_str();
-        break;
-    }
+	switch (m_value)
+	{
+	case ACE:
+		cardValue = "ACE";
+		break;
+	case JACK:
+		cardValue = "JACK";
+		break;
+	case QUEEN:
+		cardValue = "QUEEN";
+		break;
+	case KING:
+		cardValue = "KING";
+		break;
+	default:
+		std::stringstream ss;
+		ss << m_value;
+		cardValue = ss.str().c_str();
+		break;
+	}
 
-    return cardValue;
+	return cardValue;
 }
 
 /*!
  * \brief Get the color of this card as a string
  * \return QString
  */
-QString Card::getColorName()
+QString Card::getSuitName()
 {
-    QString colorName = "";
-
-    switch (mColor) {
-    case HEARTS:
-        colorName = "HEARTS";
-        break;
-    case DIAMONDS:
-        colorName = "DIAMONDS";
-        break;
-    case SPADES:
-        colorName = "SPADES";
-        break;
-    case CLUBS:
-        colorName = "CLUBS";
-        break;
-    }
-
-    return colorName;
+	return QMetaEnum::fromType<Card::Suit>().valueToKey((int)m_suit);
 }
 
-CardValue Card::getValue()
+Card::Value Card::getValue()
 {
-    return mValue;
+	return m_value;
 }
 
-CardColor Card::getColor()
+Card::Suit Card::getSuit()
 {
-    return mColor;
+	return m_suit;
 }
 
 /*!
@@ -232,22 +224,24 @@ CardColor Card::getColor()
  */
 char Card::getBlackRedColor()
 {
-    if (mColor == HEARTS || mColor == DIAMONDS) {
-        return 1;
-    }
-    return 2;
+	if (m_suit == Card::Suit::HEARTS || m_suit == Card::Suit:: DIAMONDS)
+	{
+		return 1;
+	}
+	return 2;
 }
 
 QPoint Card::getChildPosition()
 {
-    QPoint pos = getPosition();
-    int x = pos.x();
-    int y = pos.y();
-    if (!mIsOnAceSpot) {
-        y += + CardWidget::HEIGHT / 8;
-    }
+	QPoint pos = getPosition();
+	int	   x   = pos.x();
+	int	   y   = pos.y();
+	if (!m_isOnAceSpot)
+	{
+		y += +CardWidget::HEIGHT / 8;
+	}
 
-    return QPoint(x, y);
+	return QPoint(x, y);
 }
 
 /*!
@@ -256,25 +250,26 @@ QPoint Card::getChildPosition()
  */
 QPoint Card::getPosition()
 {
-    return mPosition;
+	return m_position;
 }
 
 void Card::animatePosition(QPoint pos)
 {
-    mPosition = pos;
-    setZIndex(100);
+	m_position = pos;
+	setZIndex(100);
 
-    QPropertyAnimation *animation = new QPropertyAnimation(mWidget, "pos");
-    animation->setDuration(100);
-    animation->setStartValue(mWidget->pos());
-    animation->setEndValue(mPosition);
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
+	QPropertyAnimation* animation = new QPropertyAnimation(m_widget, "pos");
+	animation->setDuration(100);
+	animation->setStartValue(m_widget->pos());
+	animation->setEndValue(m_position);
+	animation->start(QAbstractAnimation::DeleteWhenStopped);
 
-    QObject::connect(animation, SIGNAL(finished()), this, SLOT(resetZIndex()));
+	QObject::connect(animation, SIGNAL(finished()), this, SLOT(resetZIndex()));
 
-    if (mChild) {
-        mChild->updatePosition(true);
-    }
+	if (m_child)
+	{
+		m_child->updatePosition(true);
+	}
 }
 
 /*!
@@ -283,11 +278,12 @@ void Card::animatePosition(QPoint pos)
  */
 void Card::setPosition(QPoint pos)
 {
-    mPosition = pos;
-    mWidget->move(mPosition);
-    if (mChild) {
-        mChild->updatePosition();
-    }
+	m_position = pos;
+	m_widget->move(m_position);
+	if (m_child)
+	{
+		m_child->updatePosition();
+	}
 }
 
 /*!
@@ -296,12 +292,15 @@ void Card::setPosition(QPoint pos)
  */
 void Card::updatePosition(bool animate)
 {
-    if (animate) {
-        animatePosition(mParent->getChildPosition());
-    } else {
-        setPosition(mParent->getChildPosition());
-        setZIndex(mParent->getZIndex() + 1);
-    }
+	if (animate)
+	{
+		animatePosition(m_parent->getChildPosition());
+	}
+	else
+	{
+		setPosition(m_parent->getChildPosition());
+		setZIndex(m_parent->getZIndex() + 1);
+	}
 }
 
 /*!
@@ -310,10 +309,11 @@ void Card::updatePosition(bool animate)
  */
 int Card::getTopZIndex()
 {
-    if (mChild) {
-        return mChild->getTopZIndex();
-    }
-    return getZIndex() + 1;
+	if (m_child)
+	{
+		return m_child->getTopZIndex();
+	}
+	return getZIndex() + 1;
 }
 
 /*!
@@ -322,7 +322,7 @@ int Card::getTopZIndex()
  */
 int Card::getZIndex()
 {
-    return mProxy->zValue();
+	return m_proxy->zValue();
 }
 
 /*!
@@ -332,15 +332,16 @@ int Card::getZIndex()
  */
 void Card::setZIndex(int index, bool cascade)
 {
-    mProxy->setZValue(index);
-    if (mChild && cascade) {
-        mChild->setZIndex(index + 1);
-    }
+	m_proxy->setZValue(index);
+	if (m_child && cascade)
+	{
+		m_child->setZIndex(index + 1);
+	}
 }
 
 void Card::resetZIndex()
 {
-    setZIndex(mParent->getZIndex() + 1);
+	setZIndex(m_parent->getZIndex() + 1);
 }
 
 /*!
@@ -348,7 +349,7 @@ void Card::resetZIndex()
  */
 void Card::show()
 {
-    mWidget->show();
+	m_widget->show();
 }
 
 /*!
@@ -356,12 +357,12 @@ void Card::show()
  */
 void Card::hide()
 {
-    mWidget->hide();
+	m_widget->hide();
 }
 
 void Card::select()
 {
-    mBoard->selectCard(this);
+	m_board->selectCard(this);
 }
 
 /*!
@@ -370,12 +371,15 @@ void Card::select()
  */
 void Card::setSelected(bool selected)
 {
-    mSelected = selected;
-    if (mSelected) {
-        mWidget->setStyleSheet("CardWidget {background-color:white;border: 2px solid yellow;border-radius:5px;}");
-    } else {
-        mWidget->setStyleSheet("CardWidget {background-color:white;border: 2px solid black;border-radius:5px;}");
-    }
+	m_selected = selected;
+	if (m_selected)
+	{
+//		m_widget->setStyleSheet("CardWidget {background-color:white;border: 2px solid yellow;border-radius:5px;}");
+	}
+	else
+	{
+//		m_widget->setStyleSheet("CardWidget {background-color:white;border: 2px solid black;border-radius:5px;}");
+	}
 }
 
 /*!
@@ -384,7 +388,7 @@ void Card::setSelected(bool selected)
  */
 bool Card::isSelected()
 {
-    return mSelected;
+	return m_selected;
 }
 
 /*!
@@ -393,5 +397,5 @@ bool Card::isSelected()
  */
 void Card::automaticMove()
 {
-    mBoard->automaticMove(this);
+	m_board->automaticMove(this);
 }

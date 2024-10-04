@@ -16,64 +16,73 @@
  */
 
 #include "cardwidget.h"
+
+#include <QGraphicsDropShadowEffect>
+#include <QMetaEnum>
+#include <QPainter>
+#include <QPainterPath>
+#include <QStyle>
+#include <QStyleOption>
 #include <QVBoxLayout>
 
-CardWidget::CardWidget(QWidget *parent) :
-    QFrame(parent)
+CardWidget::CardWidget(QWidget* parent)
+	: QFrame(parent)
 {
-    auto *hLayout = new QHBoxLayout();
-    hLayout->setContentsMargins(0, 0, 0, 0);
+	// Enable clipping for the frame (ensures that content outside the rounded border is clipped)
+	this->setAttribute(Qt::WA_StyledBackground, true);
+	this->setAttribute(Qt::WA_OpaquePaintEvent, true);
 
-    mColorLabel = new QLabel(this);
-    mColorLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    hLayout->addWidget(mColorLabel);
-
-    mLabel = new QLabel(this);
-    hLayout->addWidget(mLabel);
-
-    auto *vLayout = new QVBoxLayout();
-    vLayout->addLayout(hLayout);
-    vLayout->setContentsMargins(10, 10, 10, 10);
-
-    mBigColorLabel = new QLabel(this);
-    mBigColorLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-    vLayout->addWidget(mBigColorLabel, 1);
-
-    setLayout(vLayout);
-    resize(WIDTH, HEIGHT);
+	resize(WIDTH, HEIGHT);
 }
 
-void CardWidget::setText(const QString& text)
+void CardWidget::setCard(Card::Value value, Card::Suit suit)
 {
-    mLabel->setText(text);
-    mLabel->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-    mLabel->setStyleSheet("color:black;font-family: 'Times New Roman'; font-size: 16px;");
-    mLabel->setWordWrap(true);
+	QString valueName = QMetaEnum::fromType<Card::Value>().valueToKey(value);
+	if (valueName.isEmpty())
+		valueName = QString::number(value);
+
+	QString resource = QString(":/cards/%1/%2").arg(QMetaEnum::fromType<Card::Suit>().valueToKey(suit)).arg(valueName);
+	qDebug() << resource;
+	this->setStyleSheet(QString("background-color: transparent; border-image: url(%1); margin: %2px;").arg(resource).arg(MARGIN));
 }
 
-void CardWidget::setColor(CardColor color)
+Card::Value CardWidget::value() const noexcept
 {
-    QString resource;
-    switch (color) {
-    case HEARTS:
-        resource = "hearts";
-        break;
-    case DIAMONDS:
-        resource = "diamonds";
-        break;
-    case SPADES:
-        resource = "spades";
-        break;
-    case CLUBS:
-        resource = "clubs";
-        break;
-    case LASTCOLOR:
-      break;
-    }
+	return m_value;
+}
 
-    QPixmap pix = QPixmap(":/icons/" + resource).scaledToWidth(WIDTH / 8, Qt::SmoothTransformation);
-    mColorLabel->setPixmap(pix);
-    pix = QPixmap(":/icons/" + resource).scaledToWidth(WIDTH * 3 / 4, Qt::SmoothTransformation);
-    mBigColorLabel->setPixmap(pix);
+Card::Suit CardWidget::suit() const noexcept
+{
+	return m_suit;
+}
 
+void CardWidget::paintEvent(QPaintEvent* event)
+{
+	QPainter painter(this);
+	painter.setRenderHint(QPainter::Antialiasing, true);  // Enable antialiasing
+
+	// Create a path for the rounded rectangle
+	QPainterPath path;
+	int radius = BORDER_RADIUS;  // Adjust the radius as needed
+	QRectF rect = this->rect().adjusted(0.5, 0.5, -0.5, -0.5);  // Adjust rect for the 1px border
+	path.addRoundedRect(rect, radius, radius);
+
+	// Clip the content outside the rounded corners
+	painter.setClipPath(path);
+
+	// Step 1: Fill the background with white
+	painter.fillPath(path, Qt::white);
+
+	// Step 2: Draw the border image (assuming 9-slice scaling for borders)
+	QStyleOptionFrame opt;
+	opt.initFrom(this);
+	style()->drawPrimitive(QStyle::PE_Frame, &opt, &painter, this);
+
+	// Step 4: Draw a 1px black border
+	QPen pen(Qt::black, 1);  // 1px black border
+	painter.setPen(pen);
+	painter.drawPath(path);
+
+	// Call the base class implementation to draw child widgets
+	QFrame::paintEvent(event);
 }

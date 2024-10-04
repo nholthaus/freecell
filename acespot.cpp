@@ -50,7 +50,7 @@ AceSpot::AceSpot(Board* board) : CardSpot(board)
  */
 bool AceSpot::canStackCard(Card* card)
 {
-    if (CardSpot::canStackCard(card) && card->getValue() == ACE) {
+    if (CardSpot::canStackCard(card) && card->getValue() == Card::Value::ACE) {
         return true;
     }
     return false;

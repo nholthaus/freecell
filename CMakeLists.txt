@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Find required Qt modules
-set(CMAKE_PREFIX_PATH $ENV{Qt6_DIR})
+set(CMAKE_PREFIX_PATH  )
 find_package(Qt6 REQUIRED COMPONENTS Widgets Core)
 qt_standard_project_setup()
 
@@ -49,7 +49,7 @@ target_sources(${PROJECT_NAME} PRIVATE
                )
 
 # Add Qt resource file
-qt6_add_resources(RESOURCE_FILES resources.qrc)
+qt6_add_resources(RESOURCE_FILES resources/resources.qrc)
 target_sources(${PROJECT_NAME} PRIVATE ${RESOURCE_FILES})
 
 # Link necessary Qt libraries to the executable
@@ -60,6 +60,7 @@ if(WIN32)
 	set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE OFF)
 endif()
 
+# Install the required DLLs to run
 include(InstallRequiredSystemLibraries)
 if (WIN32)
 	include(windeployqt)

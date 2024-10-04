@@ -24,21 +24,33 @@
 
 class CardWidget : public QFrame
 {
-    Q_OBJECT
+	Q_OBJECT
+protected:
+
+	void paintEvent(QPaintEvent* event) override;
+
 public:
-    CardWidget(QWidget *parent = 0);
 
-    void setText(const QString&);
-    void setColor(CardColor color);
+	explicit CardWidget(QWidget* parent = nullptr);
 
-    const static int WIDTH = 140;
-    const static int HEIGHT = 230;
+	void setCard(Card::Value value, Card::Suit suit);
+
+	constexpr static int WIDTH	= 150;
+	constexpr static int HEIGHT = 210;
+	constexpr static int BORDER_RADIUS = 15;
+	constexpr static int MARGIN = 5;
+
+protected:
+public:
+
+	[[nodiscard]] Card::Value value() const noexcept;
+	[[nodiscard]] Card::Suit  suit() const noexcept;
 
 protected:
 
-    QLabel* mLabel;
-    QLabel* mColorLabel;
-    QLabel* mBigColorLabel;
+	Card::Value m_value;
+	Card::Suit  m_suit;
+	QPixmap m_backgroundImage;
 };
 
 #endif // CARDWIDGET_H

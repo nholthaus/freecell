@@ -26,22 +26,24 @@ class Card;
 class AbstractCardHolder : public QObject
 {
 public:
-    AbstractCardHolder();
-    AbstractCardHolder* getParent();
 
-    virtual void setChild(Card*);
-    Card* getChild();
+	AbstractCardHolder();
+	AbstractCardHolder* getParent();
 
-    virtual bool canStackCard(Card* card) = 0;
-    virtual bool isStackable() = 0;
-    virtual void select() = 0;
+	virtual void setChild(Card*);
+	Card*		 getChild();
 
-    virtual QPoint getChildPosition() = 0;
-    virtual int getZIndex();
+	virtual bool canStackCard(Card* card) = 0;
+	virtual bool isStackable()			  = 0;
+	virtual void select()				  = 0;
+
+	virtual QPoint getChildPosition() = 0;
+	virtual int	   getZIndex();
 
 protected:
-    AbstractCardHolder* mParent;
-    Card* mChild;
+
+	AbstractCardHolder* m_parent;
+	Card*				m_child;
 };
 
 #endif // ABSTRACTCARDHOLDER_H

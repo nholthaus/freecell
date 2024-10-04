@@ -18,14 +18,14 @@
 #include "deck.h"
 #include "card.h"
 
+#include <algorithm>
+#include <random>
+
 /*!
  * \brief Constructor
  * \param board The board
  */
-Deck::Deck(Board* board)
-{
-    build(board);
-}
+Deck::Deck(Board* board) { build(board); }
 
 /*!
  * \brief Shuffle the cards in this deck
@@ -35,17 +35,10 @@ Deck::Deck(Board* board)
  */
 void Deck::shuffle()
 {
-    char c;
-    std::vector<Card*> tmpCards;
-    std::vector<Card*>::iterator it;
+	std::random_device randomDevice;
+	std::mt19937	   generator(randomDevice());
 
-    while (mCards.size()) {
-        c = rand() % mCards.size();
-        it = mCards.begin() + c;
-        tmpCards.push_back(*it);
-        mCards.erase(it);
-    }
-    mCards = tmpCards;
+	std::shuffle(mCards.begin(), mCards.end(), generator);
 }
 
 /*!
@@ -58,13 +51,15 @@ void Deck::shuffle()
  */
 void Deck::build(Board* board)
 {
-    mCards.clear();
+	mCards.clear();
 
-    for (CardColor i = HEARTS; i<= CLUBS; ++i) {
-        for (CardValue j = ACE; j <= KING; ++j) {
-            pushCard(new Card(i, j, board));
-        }
-    }
+	for (Card::Suit i = Card::Suit::HEARTS; i <= Card::Suit::CLUBS; ++i)
+	{
+		for (Card::Value j = Card::Value::ACE; j <= Card::Value::KING; ++j)
+		{
+			pushCard(new Card(i, j, board));
+		}
+	}
 }
 
 /*!
@@ -73,26 +68,20 @@ void Deck::build(Board* board)
  */
 Card* Deck::drawCard()
 {
-    Card* card = mCards.back();
-    mCards.pop_back();
+	Card* card = mCards.back();
+	mCards.pop_back();
 
-    return card;
+	return card;
 }
 
 /*!
  * \brief Push a card at the end of the deck
  * \param card The card to add
  */
-void Deck::pushCard(Card* card)
-{
-    mCards.push_back(card);
-}
+void Deck::pushCard(Card* card) { mCards.push_back(card); }
 
 /*!
  * \brief Get the number of cards in the deck
  * \return The size (int)
  */
-int Deck::getSize()
-{
-    return mCards.size();
-}
+int Deck::getSize() { return mCards.size(); }
