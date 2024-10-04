@@ -21,18 +21,17 @@
 CardWidget::CardWidget(QWidget *parent) :
     QFrame(parent)
 {
-    mLabel = new QLabel(this);
-
-
-    QHBoxLayout *hLayout = new QHBoxLayout();
+    auto *hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
-    hLayout->addWidget(mLabel);
 
     mColorLabel = new QLabel(this);
-    mColorLabel->setAlignment(Qt::AlignTop | Qt::AlignRight);
+    mColorLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     hLayout->addWidget(mColorLabel);
 
-    QVBoxLayout *vLayout = new QVBoxLayout();
+    mLabel = new QLabel(this);
+    hLayout->addWidget(mLabel);
+
+    auto *vLayout = new QVBoxLayout();
     vLayout->addLayout(hLayout);
     vLayout->setContentsMargins(10, 10, 10, 10);
 
@@ -44,11 +43,11 @@ CardWidget::CardWidget(QWidget *parent) :
     resize(WIDTH, HEIGHT);
 }
 
-void CardWidget::setText(QString text)
+void CardWidget::setText(const QString& text)
 {
     mLabel->setText(text);
     mLabel->setAlignment(Qt::AlignTop | Qt::AlignHCenter);
-    mLabel->setStyleSheet("background-color:white;");
+    mLabel->setStyleSheet("color:black;font-family: 'Times New Roman'; font-size: 16px;");
     mLabel->setWordWrap(true);
 }
 
@@ -68,6 +67,8 @@ void CardWidget::setColor(CardColor color)
     case CLUBS:
         resource = "clubs";
         break;
+    case LASTCOLOR:
+      break;
     }
 
     QPixmap pix = QPixmap(":/icons/" + resource).scaledToWidth(WIDTH / 8, Qt::SmoothTransformation);

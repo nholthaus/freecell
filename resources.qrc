@@ -4,5 +4,7 @@
         <file alias="diamonds">images/diamonds.png</file>
         <file alias="hearts">images/hearts.png</file>
         <file alias="spades">images/spades.png</file>
+        <file alias="freecell">images/freecell.png</file>
+        <file alias="freecell_ico">images/freecell_ico.png</file>
     </qresource>
 </RCC>

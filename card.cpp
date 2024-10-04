@@ -56,7 +56,7 @@ Card::Card(CardColor color, CardValue value, Board* board) : AbstractCardHolder(
  */
 QString Card::getLabel()
 {
-    return getValueName() + " of " + getColorName();
+    return getValueName();
 }
 
 /*!

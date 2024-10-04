@@ -28,7 +28,7 @@ class CardWidget : public QFrame
 public:
     CardWidget(QWidget *parent = 0);
 
-    void setText(QString);
+    void setText(const QString&);
     void setColor(CardColor color);
 
     const static int WIDTH = 140;

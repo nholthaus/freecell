@@ -34,6 +34,7 @@ MainWindow::MainWindow(QWidget *parent) :
     menuBar()->addMenu(fileMenu);
 
     setWindowTitle("Freecell");
+    setWindowIcon(QIcon(":/icons/freecell"));
 
     mBoard = new Board();
     QWidget* widget = mBoard->getBoardWidget();
