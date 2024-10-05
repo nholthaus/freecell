@@ -28,7 +28,7 @@ class Board;
 class Freecell : public CardSpot
 {
 public:
-    Freecell(Board*);
+    explicit Freecell(Board*);
 };
 
 #endif // FREECELL_H

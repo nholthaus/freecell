@@ -86,7 +86,7 @@ void Card::setParent(AbstractCardHolder* parent, bool animate)
  */
 int Card::countChildren()
 {
-	if (m_child == 0)
+	if (!m_child)
 	{
 		return 0;
 	}
@@ -100,7 +100,7 @@ int Card::countChildren()
  */
 bool Card::canStackCard(Card* card)
 {
-	return isStackable() && getChild() == 0 && card->isMovable() && isValidParentOf(card);
+	return isStackable() && getChild() == nullptr && card->isMovable() && isValidParentOf(card);
 }
 
 /*!
@@ -122,7 +122,7 @@ bool Card::isMovable()
 	{
 		return false;
 	}
-	if (m_child == 0)
+	if (!m_child)
 	{
 		return true;
 	}
@@ -136,7 +136,7 @@ bool Card::isMovable()
  */
 bool Card::isValidParentOf(Card* card)
 {
-	if (card == 0)
+	if (!card)
 	{
 		return true;
 	}
@@ -144,7 +144,7 @@ bool Card::isValidParentOf(Card* card)
 	{
 		return getValue() - card->getValue() == -1 && card->getSuit() == getSuit();
 	}
-	return getValue() - card->getValue() == 1 && card->getBlackRedColor() != getBlackRedColor();
+	return this->getValue() - card->getValue() == 1 && card->getBlackRedColor() != this->getBlackRedColor();
 }
 
 /*!
@@ -241,7 +241,7 @@ QPoint Card::getChildPosition()
 		y += +CardWidget::HEIGHT / 6;
 	}
 
-	return QPoint(x, y);
+	return {x, y};
 }
 
 /*!

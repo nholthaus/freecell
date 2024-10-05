@@ -34,7 +34,9 @@ public:
     explicit CardProxy(Card* card);
 
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+	void mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event) override;
+	void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
