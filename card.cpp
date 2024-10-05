@@ -238,7 +238,7 @@ QPoint Card::getChildPosition()
 	int	   y   = pos.y();
 	if (!m_isOnAceSpot)
 	{
-		y += +CardWidget::HEIGHT / 8;
+		y += +CardWidget::HEIGHT / 6;
 	}
 
 	return QPoint(x, y);

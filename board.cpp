@@ -34,10 +34,10 @@ Board::Board()
 
 	for (i = 0; i < NB_COLUMNS; i++)
 	{
-		mLeafColumns[i] = 0;
+		mLeafColumns[i] = nullptr;
 	}
 
-	mSelectedCard = 0;
+	mSelectedCard = nullptr;
 
 	mBoardWidget = new QGraphicsView();
 
@@ -61,7 +61,12 @@ Board::Board()
 	mBoardWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	mBoardWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-	mScene = new BoardScene(QRectF(0, -(int)(CardWidget::HEIGHT * 1.2), 1200, 700), mBoardWidget);
+	qreal minWidth = 9 * CardWidget::WIDTH + 12 * SPACING;
+	qreal minHeight = 4 * CardWidget::HEIGHT + 10 * SPACING;
+
+	mScene = new BoardScene(QRectF(QPointF(0, 0), QPointF(minWidth, minHeight)), mBoardWidget);
+	mBoardWidget->setAlignment(Qt::AlignTop|Qt::AlignCenter);
+	mBoardWidget->setMinimumSize(minWidth, minHeight);
 	mBoardWidget->setScene(mScene);
 
 	QObject::connect(mScene, SIGNAL(rightClick()), this, SLOT(tryAutomaticAceMove()));
@@ -70,7 +75,7 @@ Board::Board()
 	for (i = 0; i < 4; i++)
 	{
 		freecell = new Freecell(this);
-		freecell->setPosition(QPointF(i * CardWidget::WIDTH, mScene->sceneRect().y()));
+		freecell->setPosition(QPointF(i * (CardWidget::WIDTH + SPACING) + 2 * SPACING, 2 * SPACING));
 		mFreeCells.push_back(freecell);
 	}
 
@@ -78,7 +83,7 @@ Board::Board()
 	for (i = 0; i < 4; i++)
 	{
 		aceSpot = new AceSpot(this);
-		aceSpot->setPosition(QPointF((4.5 + i) * CardWidget::WIDTH, mScene->sceneRect().y()));
+		aceSpot->setPosition(QPointF((5 + i) * (CardWidget::WIDTH + SPACING) + 2 * SPACING, 2 * SPACING));
 		mAceSpots.push_back(aceSpot);
 	}
 
@@ -86,7 +91,7 @@ Board::Board()
 	for (i = 0; i < NB_COLUMNS; i++)
 	{
 		columnSpot = new ColumnSpot(this);
-		columnSpot->setPosition(QPointF(i * CardWidget::WIDTH, 0));
+		columnSpot->setPosition(QPointF((0.5 + i) * (CardWidget::WIDTH + SPACING) + 2 * SPACING, 6 * SPACING + CardWidget::HEIGHT));
 		mColumns[i] = columnSpot;
 	}
 
@@ -139,11 +144,11 @@ void Board::collectCards()
 		mLeafColumns[i] = 0;
 	}
 
-	while (mCards.size())
+	while (!mCards.empty())
 	{
 		card = mCards.back();
 		card->hide();
-		card->setParent(0);
+		card->setParent(nullptr);
 		mDeck->pushCard(card);
 
 		mCards.pop_back();
@@ -174,7 +179,7 @@ bool Board::hasEnoughFreecells(int cardsToMove)
 
 void Board::freeCard(Card* card)
 {
-	Card* cell = 0; // getFreeCell();
+	Card* cell = 0; // getFreeCell(); // TODO: NMH this is wrong
 	if (cell)
 	{
 		cell = card;
@@ -191,9 +196,9 @@ void Board::automaticMove(Card* card)
 	AbstractCardHolder* bottomSpot;
 	if (!card->isStackable())
 	{
-		for (int i = 0; i < NB_COLUMNS; i++)
+		for (auto & mColumn : mColumns)
 		{
-			bottomSpot = mColumns[i];
+			bottomSpot = mColumn;
 			while (bottomSpot->getChild())
 			{
 				// get the bottom card of the column
@@ -242,11 +247,11 @@ bool Board::tryAutomaticAceMove(Card* card)
 	}
 	else
 	{
-		for (int i = 0; i < NB_COLUMNS; i++)
+		for (auto & mColumn : mColumns)
 		{
-			if (mColumns[i]->getChild())
+			if (mColumn->getChild())
 			{
-				card = mColumns[i]->getChild();
+				card = mColumn->getChild();
 				while (card->getChild())
 				{
 					// get the bottom card of the column
@@ -268,7 +273,7 @@ void Board::unselectCard()
 	if (mSelectedCard)
 	{
 		mSelectedCard->setSelected(false);
-		mSelectedCard = 0;
+		mSelectedCard = nullptr;
 	}
 }
 

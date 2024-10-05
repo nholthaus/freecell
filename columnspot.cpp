@@ -24,9 +24,9 @@
 ColumnSpot::ColumnSpot(Board* board) : CardSpot(board)
 {
     mProxy = new CardSpotProxy(this);
-    QFrame* widget = new QFrame();
+    auto* widget = new QFrame();
     widget->resize(CardWidget::WIDTH, CardWidget::HEIGHT);
-    widget->setStyleSheet("background-color:#00FF00;border:1px solid black;");
+	widget->setStyleSheet(QString("background-color:transparent; border: 6px solid darkGreen; border-radius: %1px;").arg(CardWidget::BORDER_RADIUS));
     mProxy->setWidget(widget);
     mBoard->addItem(mProxy);
 }

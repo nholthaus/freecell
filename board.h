@@ -37,6 +37,10 @@ class Board : public QObject
 {
     Q_OBJECT
 public:
+
+	static constexpr int SPACING = 15;
+
+public:
     Board();
 
     void dealCards();

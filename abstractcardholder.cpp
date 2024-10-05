@@ -22,8 +22,8 @@
  */
 AbstractCardHolder::AbstractCardHolder()
 {
-	m_parent = 0;
-	m_child	 = 0;
+	m_parent = nullptr;
+	m_child	 = nullptr;
 }
 
 AbstractCardHolder* AbstractCardHolder::getParent()

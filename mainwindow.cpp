@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
 
-    QMenu* fileMenu = new QMenu("File");
+    auto* fileMenu = new QMenu("File");
     fileMenu->addAction("New game", this, SLOT(newGame()));
     fileMenu->addAction("Quit", qApp, SLOT(quit()));
     menuBar()->addMenu(fileMenu);
@@ -37,8 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowIcon(QIcon(":/icons/freecell"));
 
     mBoard = new Board();
-    QWidget* widget = mBoard->getBoardWidget();
-    setCentralWidget(widget);
+    setCentralWidget(mBoard->getBoardWidget());
 
     newGame();
 }
