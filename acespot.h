@@ -19,9 +19,9 @@
 #define ACESPOT_H
 
 #include "cardspot.h"
+#include "card.h"
 
 class Board;
-class Card;
 
 /*!
  * \brief Represents ace spot objects
@@ -33,11 +33,16 @@ class Card;
 class AceSpot : public CardSpot
 {
 public:
-    AceSpot(Board*);
 
-    bool canStackCard(Card*);
-    bool isStackable();
-    void setChild(Card *);
+	explicit AceSpot(Board* board, Card::Suit suit);
+
+	bool canStackCard(Card* card) override;
+	bool isStackable() override;
+	void setChild(Card* card) override;
+
+private:
+
+	Card::Suit m_suit;
 };
 
 #endif // ACESPOT_H

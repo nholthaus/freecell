@@ -8,10 +8,10 @@
         <file alias="card">images/playing_card.jpg</file>
     </qresource>
     <qresource prefix="/suits">
-        <file alias="clubs">suits/clubs.png</file>
-        <file alias="diamonds">suits/diamonds.png</file>
-        <file alias="hearts">suits/hearts.png</file>
-        <file alias="spades">suits/spades.png</file>
+        <file alias="CLUBS">suitsMonochrome/clubs.png</file>
+        <file alias="DIAMONDS">suitsMonochrome/diamonds.png</file>
+        <file alias="HEARTS">suitsMonochrome/hearts.png</file>
+        <file alias="SPADES">suitsMonochrome/spades.png</file>
     </qresource>
     <qresource prefix="/cards">
         <file alias="back">cards/back.png</file>

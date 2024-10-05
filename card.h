@@ -19,6 +19,7 @@
 #define CARD_H
 
 #include <QPoint>
+#include <QMetaEnum>
 
 #include "abstractcardholder.h"
 
@@ -47,12 +48,17 @@ public:
 	enum Suit : int
 	{
 		HEARTS	 = 1,
-		DIAMONDS = 2,
-		SPADES	 = 3,
-		CLUBS	 = 4,
+		CLUBS	 = 2,
+		DIAMONDS = 3,
+		SPADES	 = 4,
 		LASTSUIT
 	};
 	Q_ENUM(Suit)
+
+	static QString suitName(Card::Suit suit) noexcept
+	{
+		return QMetaEnum::fromType<Card::Suit>().valueToKey(suit);
+	}
 
 public:
 

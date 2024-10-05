@@ -17,24 +17,38 @@
 
 #include "acespot.h"
 #include "board.h"
-#include "cardwidget.h"
 #include "cardspotproxy.h"
+#include "cardwidget.h"
+
 #include <QLabel>
+#include <QMetaEnum>
 
 /*!
  * \brief Constructor
  * \param board The board
  */
-AceSpot::AceSpot(Board* board) : CardSpot(board)
+AceSpot::AceSpot(Board* board, Card::Suit suit)
+	: CardSpot(board)
+	, m_suit(suit)
 {
-    mProxy = new CardSpotProxy(this);
-    mProxy->setData(0, QVariant("acespot"));
-    auto* widget = new QLabel();
-    widget->resize(CardWidget::WIDTH, CardWidget::HEIGHT);
-    widget->setStyleSheet(QString("background-color:transparent; border: 6px solid darkGreen; border-radius: %1px;").arg(CardWidget::BORDER_RADIUS));
+	mProxy = new CardSpotProxy(this);
+	mProxy->setData(0, QVariant("acespot"));
+	mProxy->setData(1, QVariant(m_suit));
 
-    mProxy->setWidget(widget);
-    mBoard->addItem(mProxy);
+	auto backgroundImage = QPixmap(QString(":/suits/%1").arg(Card::suitName(suit)));
+	backgroundImage = backgroundImage.scaled(backgroundImage.width()/2.0, backgroundImage.height()/2.0);
+
+	auto* widget = new QLabel();
+	widget->resize(CardWidget::WIDTH, CardWidget::HEIGHT);
+	widget->setStyleSheet(QString("background-color:transparent;"
+								  "border: 6px solid darkGreen;"
+								  "border-radius: %1px;")
+							  .arg(CardWidget::BORDER_RADIUS));
+	widget->setPixmap(backgroundImage);
+	widget->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+
+	mProxy->setWidget(widget);
+	mBoard->addItem(mProxy);
 }
 
 /*!
@@ -44,10 +58,11 @@ AceSpot::AceSpot(Board* board) : CardSpot(board)
  */
 bool AceSpot::canStackCard(Card* card)
 {
-    if (CardSpot::canStackCard(card) && card->getValue() == Card::Value::ACE) {
-        return true;
-    }
-    return false;
+	if (CardSpot::canStackCard(card) && card->getValue() == Card::Value::ACE && card->getSuit() == m_suit)
+	{
+		return true;
+	}
+	return false;
 }
 
 /*!
@@ -56,7 +71,7 @@ bool AceSpot::canStackCard(Card* card)
  */
 bool AceSpot::isStackable()
 {
-    return true;
+	return true;
 }
 
 /*!
@@ -65,8 +80,9 @@ bool AceSpot::isStackable()
  */
 void AceSpot::setChild(Card* card)
 {
-    CardSpot::setChild(card);
-    if (card) {
-        card->setOnAceSpot(true);
-    }
+	CardSpot::setChild(card);
+	if (card)
+	{
+		card->setOnAceSpot(true);
+	}
 }

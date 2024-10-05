@@ -82,7 +82,7 @@ Board::Board()
 	AceSpot* aceSpot;
 	for (i = 0; i < 4; i++)
 	{
-		aceSpot = new AceSpot(this);
+		aceSpot = new AceSpot(this, static_cast<Card::Suit>(i + 1));
 		aceSpot->setPosition(QPointF((5 + i) * (CardWidget::WIDTH + SPACING) + 2 * SPACING, 2 * SPACING));
 		mAceSpots.push_back(aceSpot);
 	}

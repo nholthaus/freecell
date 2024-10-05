@@ -53,9 +53,9 @@ void Deck::build(Board* board)
 {
 	mCards.clear();
 
-	for (Card::Suit i = Card::Suit::HEARTS; i <= Card::Suit::CLUBS; ++i)
+	for (Card::Suit i = Card::Suit::HEARTS; i < Card::Suit::LASTSUIT; ++i)
 	{
-		for (Card::Value j = Card::Value::ACE; j <= Card::Value::KING; ++j)
+		for (Card::Value j = Card::Value::ACE; j < Card::Value::LASTVALUE; ++j)
 		{
 			pushCard(new Card(i, j, board));
 		}
