@@ -37,3 +37,13 @@ Freecell::Freecell(Board* board) : CardSpot(board)
     mProxy->setWidget(widget);
     mBoard->addItem(mProxy);
 }
+
+bool Freecell::isStackable()
+{
+	return false;
+}
+
+bool Freecell::canStackCard(Card* card)
+{
+	return isEmpty() && card->isMovable() && !card->getChild() && card->getValue() != Card::Value::ACE;
+}

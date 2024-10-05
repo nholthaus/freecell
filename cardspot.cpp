@@ -18,17 +18,18 @@
 #include "cardspot.h"
 #include <QGraphicsProxyWidget>
 #include <QPointF>
-#include "card.h"
 #include "board.h"
+#include "card.h"
 
 /*!
  * \brief Constructor
  * \param board The board
  */
-CardSpot::CardSpot(Board* board) : AbstractCardHolder()
+CardSpot::CardSpot(Board* board)
+	: AbstractCardHolder()
 {
-    mProxy = 0;
-    mBoard = board;
+	mProxy = nullptr;
+	mBoard = board;
 }
 
 /*!
@@ -37,7 +38,7 @@ CardSpot::CardSpot(Board* board) : AbstractCardHolder()
  */
 bool CardSpot::isEmpty()
 {
-    return m_child == 0;
+	return m_child == nullptr;
 }
 
 /*!
@@ -45,10 +46,10 @@ bool CardSpot::isEmpty()
  * \param card The card to check
  * \return boolean
  */
-bool CardSpot::canStackCard(Card* card)
-{
-    return isEmpty() && card->isMovable();
-}
+//bool CardSpot::canStackCard(Card* card)
+//{
+//	return isEmpty() && card->isMovable();
+//}
 
 /*!
  * \brief Check if the cards can be stacked one after another on this spot
@@ -56,7 +57,7 @@ bool CardSpot::canStackCard(Card* card)
  */
 bool CardSpot::isStackable()
 {
-    return false;
+	return false;
 }
 
 /*!
@@ -65,7 +66,7 @@ bool CardSpot::isStackable()
  */
 void CardSpot::setPosition(QPointF pos)
 {
-    mProxy->setPos(pos);
+	mProxy->setPos(pos);
 }
 
 /*!
@@ -74,7 +75,7 @@ void CardSpot::setPosition(QPointF pos)
  */
 QPoint CardSpot::getChildPosition()
 {
-    return mProxy->pos().toPoint();
+	return mProxy->pos().toPoint();
 }
 
 /*!
@@ -82,11 +83,14 @@ QPoint CardSpot::getChildPosition()
  */
 void CardSpot::select()
 {
-    Card* card = mBoard->getSelectedCard();
-    if (card && canStackCard(card)) {
-        card->setParent(this, true);
-    } else if (card) {
-        card->updatePosition(true);
-        mBoard->unselectCard();
-    }
+	Card* card = mBoard->getSelectedCard();
+	if (card && canStackCard(card))
+	{
+		card->setParent(this, true);
+	}
+	else if (card)
+	{
+		card->updatePosition(true);
+		mBoard->unselectCard();
+	}
 }

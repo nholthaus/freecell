@@ -36,7 +36,7 @@ class CardSpot : public AbstractCardHolder
 public:
     CardSpot(Board*);
     bool isEmpty();
-    bool canStackCard(Card* card) override;
+    virtual bool canStackCard(Card* card) = 0;
     bool isStackable();
     void setPosition(QPointF pos);
     QPoint getChildPosition();

@@ -25,9 +25,9 @@ class Board;
 class ColumnSpot : public CardSpot
 {
 public:
-    ColumnSpot(Board*);
-    bool isStackable();
-    bool canStackCard(Card *);
+    explicit ColumnSpot(Board*);
+    bool isStackable() override;
+    bool canStackCard(Card *) override;
 };
 
 #endif // COLUMNSPOT_H

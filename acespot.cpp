@@ -58,7 +58,7 @@ AceSpot::AceSpot(Board* board, Card::Suit suit)
  */
 bool AceSpot::canStackCard(Card* card)
 {
-	if (CardSpot::canStackCard(card) && card->getValue() == Card::Value::ACE && card->getSuit() == m_suit)
+	if (isEmpty() && card->isMovable() && card->getValue() == Card::Value::ACE && card->getSuit() == m_suit)
 	{
 		return true;
 	}

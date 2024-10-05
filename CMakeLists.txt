@@ -7,6 +7,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 # Set the C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
 # Find required Qt modules
 set(CMAKE_PREFIX_PATH $ENV{Qt6_DIR})
@@ -57,7 +58,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt6::Widgets Qt6::Core)
 
 # Enable console output (optional)
 if(WIN32)
-	set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE OFF)
+	set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE ON)
 endif()
 
 # Install the required DLLs to run

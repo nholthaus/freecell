@@ -29,6 +29,8 @@ class Freecell : public CardSpot
 {
 public:
     explicit Freecell(Board*);
+	bool isStackable() override;
+	bool canStackCard(Card *) override;
 };
 
 #endif // FREECELL_H
