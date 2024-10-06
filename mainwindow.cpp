@@ -16,30 +16,33 @@
  */
 
 #include "mainwindow.h"
-#include "board.h"
-#include <QMenuBar>
 #include <QApplication>
+#include <QMenuBar>
+#include "board.h"
 
 /*!
  * \brief Constructor
  * \param parent The parent widget
  */
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent)
+MainWindow::MainWindow(QWidget* parent)
+	: QMainWindow(parent)
 {
+	auto* gameMenu = new QMenu("Game");
+	gameMenu->addAction("New Game", Qt::Key_F2, this, SLOT(newGame()));
+	gameMenu->addSeparator();
+	auto* relaxedAction = gameMenu->addAction("Relaxed", this, [this](bool value) { m_board->setRelaxed(value); });
+	relaxedAction->setCheckable(true);
+	gameMenu->addSeparator();
+	gameMenu->addAction("E&xit", qApp, SLOT(quit()));
+	menuBar()->addMenu(gameMenu);
 
-    auto* fileMenu = new QMenu("File");
-    fileMenu->addAction("New game", Qt::Key_F2, this, SLOT(newGame()));
-    fileMenu->addAction("Quit", qApp, SLOT(quit()));
-    menuBar()->addMenu(fileMenu);
+	setWindowTitle("Freecell");
+	setWindowIcon(QIcon(":/icons/freecell"));
 
-    setWindowTitle("Freecell");
-    setWindowIcon(QIcon(":/icons/freecell"));
+	m_board = new Board();
+	setCentralWidget(m_board->getBoardWidget());
 
-    mBoard = new Board();
-    setCentralWidget(mBoard->getBoardWidget());
-
-    newGame();
+	newGame();
 }
 
 /*!
@@ -47,8 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
  */
 void MainWindow::newGame()
 {
-    endGame();
-    mBoard->dealCards();
+	endGame();
+	m_board->dealCards();
 }
 
 /*!
@@ -56,5 +59,5 @@ void MainWindow::newGame()
  */
 void MainWindow::endGame()
 {
-    mBoard->collectCards();
+	m_board->collectCards();
 }

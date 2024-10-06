@@ -29,16 +29,16 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
 
-    void endGame();
 signals:
 
 public slots:
     void newGame();
+    void endGame();
 
 protected:
-    Board* mBoard;
+    Board* m_board;
 };
 
 #endif // MAINWINDOW_H
