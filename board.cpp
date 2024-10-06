@@ -188,7 +188,7 @@ bool Board::hasEnoughFreecells(int cardsToMove)
 	if(mRelaxed)
 		return true;
 
-	return cardsToMove < (countFreeCells() + 1) * (int)pow(2, countEmptyColumns());
+	return cardsToMove <= (countFreeCells() + 1) * (int)pow(2, countEmptyColumns());
 }
 
 void Board::freeCard(Card* card)
