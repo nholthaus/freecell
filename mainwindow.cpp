@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     auto* fileMenu = new QMenu("File");
-    fileMenu->addAction("New game", this, SLOT(newGame()));
+    fileMenu->addAction("New game", Qt::Key_F2, this, SLOT(newGame()));
     fileMenu->addAction("Quit", qApp, SLOT(quit()));
     menuBar()->addMenu(fileMenu);
 
