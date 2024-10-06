@@ -61,11 +61,11 @@ Board::Board()
 	mBoardWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	mBoardWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-	qreal minWidth = 9 * CardWidget::WIDTH + 12 * SPACING;
+	qreal minWidth	= 9 * CardWidget::WIDTH + 12 * SPACING;
 	qreal minHeight = 4 * CardWidget::HEIGHT + 10 * SPACING;
 
 	mScene = new BoardScene(QRectF(QPointF(0, 0), QPointF(minWidth, minHeight)), mBoardWidget);
-	mBoardWidget->setAlignment(Qt::AlignTop|Qt::AlignCenter);
+	mBoardWidget->setAlignment(Qt::AlignTop | Qt::AlignCenter);
 	mBoardWidget->setMinimumSize(minWidth, minHeight);
 	mBoardWidget->setScene(mScene);
 
@@ -157,11 +157,24 @@ void Board::collectCards()
 
 int Board::countFreeCells()
 {
-	int								 count = 0;
-	std::vector<Freecell*>::iterator it;
-	for (it = mFreeCells.begin(); it < mFreeCells.end(); it++)
+	int count = 0;
+	for (auto freecell : mFreeCells)
 	{
-		if ((*it)->isEmpty())
+		if (freecell->isEmpty())
+		{
+			count++;
+		}
+	}
+
+	return count;
+}
+
+int Board::countEmptyColumns()
+{
+	int count = 0;
+	for (auto column : mColumns)
+	{
+		if (column->isEmpty())
 		{
 			count++;
 		}
@@ -172,9 +185,10 @@ int Board::countFreeCells()
 
 bool Board::hasEnoughFreecells(int cardsToMove)
 {
-	int capability = countFreeCells() + 1;
+	if(mRelaxed)
+		return true;
 
-	return capability >= cardsToMove;
+	return cardsToMove < (countFreeCells() + 1) * (int)pow(2, countEmptyColumns());
 }
 
 void Board::freeCard(Card* card)
@@ -196,7 +210,7 @@ void Board::automaticMove(Card* card)
 	AbstractCardHolder* bottomSpot;
 	if (!card->isStackable())
 	{
-		for (auto & mColumn : mColumns)
+		for (auto& mColumn : mColumns)
 		{
 			bottomSpot = mColumn;
 			while (bottomSpot->getChild())
@@ -247,7 +261,7 @@ bool Board::tryAutomaticAceMove(Card* card)
 	}
 	else
 	{
-		for (auto & mColumn : mColumns)
+		for (auto& mColumn : mColumns)
 		{
 			if (mColumn->getChild())
 			{
@@ -312,4 +326,14 @@ void Board::setSelectedCard(Card* card)
 Card* Board::getSelectedCard()
 {
 	return mSelectedCard;
+}
+
+void Board::setRelaxed(bool value)
+{
+	mRelaxed = value;
+}
+
+bool Board::isRelaxed() const noexcept
+{
+	return mRelaxed;
 }

@@ -48,6 +48,7 @@ public:
 
     void freeCard(Card* card);
     int countFreeCells();
+	int countEmptyColumns();
     bool hasEnoughFreecells(int cardsToMove);
 
     void automaticMove(Card*);
@@ -57,6 +58,9 @@ public:
     void setSelectedCard(Card*);
     Card* getSelectedCard();
     void addItem(QGraphicsProxyWidget*);
+
+	void setRelaxed(bool value);
+	bool isRelaxed() const noexcept;
 
     QWidget* getBoardWidget();
 
@@ -77,6 +81,8 @@ protected:
 
     Card* mSelectedCard;
     std::vector<Card*> mCards;
+
+	bool mRelaxed = false;
 };
 
 #endif // BOARD_H
