@@ -303,6 +303,7 @@ void Card::updatePosition(bool animate)
 	if (animate)
 	{
 		animatePosition(m_parent->getChildPosition());
+		setZIndex(100);
 	}
 	else
 	{
