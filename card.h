@@ -71,6 +71,7 @@ public:
 	bool isStackable() override;
 	bool isMovable();
 	bool isValidParentOf(Card*);
+	bool isValidParentOfAllChildren();
 	void setOnAceSpot(bool);
 	bool isOnAceSpot();
 

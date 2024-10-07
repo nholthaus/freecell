@@ -147,6 +147,14 @@ bool Card::isValidParentOf(Card* card)
 	return this->getValue() - card->getValue() == 1 && card->getBlackRedColor() != this->getBlackRedColor();
 }
 
+bool Card::isValidParentOfAllChildren()
+{
+	if(!m_child)
+		return true;
+
+	return isValidParentOf(m_child) && m_child->isValidParentOfAllChildren();
+}
+
 /*!
  * \brief The the "ace spot" flag of the card
  * The flag is used for the stacking behaviour, as ace spot only receive card of the same colour
@@ -362,7 +370,8 @@ void Card::hide()
 
 void Card::select()
 {
-	m_board->selectCard(this);
+	if(m_board->hasEnoughFreecells(this->countChildren() + 1))
+		m_board->selectCard(this);
 }
 
 /*!
@@ -374,11 +383,11 @@ void Card::setSelected(bool selected)
 	m_selected = selected;
 	if (m_selected)
 	{
-//		m_widget->setStyleSheet("CardWidget {background-color:white;border: 2px solid yellow;border-radius:5px;}");
+	//	m_widget->setStyleSheet("CardWidget {background-color:white;border: 2px solid yellow;border-radius:5px;}");
 	}
 	else
 	{
-//		m_widget->setStyleSheet("CardWidget {background-color:white;border: 2px solid black;border-radius:5px;}");
+	//	m_widget->setStyleSheet("CardWidget {background-color:white;border: 2px solid black;border-radius:5px;}");
 	}
 }
 

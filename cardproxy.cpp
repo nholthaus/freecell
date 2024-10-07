@@ -36,10 +36,7 @@ CardProxy::CardProxy(Card* card)
 
 void CardProxy::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
-//	if (!mCard->getChild())
-//	{
-		mCard->automaticMove();
-//	}
+	mCard->automaticMove();
 }
 
 /*!
@@ -50,16 +47,21 @@ void CardProxy::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
 	if (event->button() == Qt::LeftButton)
 	{
-		if (!mCard->isSelected())
+		if (!mCard->isSelected() && mCard->isMovable() && mCard->isValidParentOfAllChildren())
 		{
 			mCard->select();
 			mCard->setZIndex(100);
+			event->setAccepted(true);
+			return;
 		}
 	}
 	else if (event->button() == Qt::RightButton)
 	{
 		mCard->setZIndex(mCard->getTopZIndex(), false);
+		event->setAccepted(true);
+		return;
 	}
+	event->setAccepted(false);
 }
 
 /*!
