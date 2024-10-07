@@ -40,7 +40,6 @@ Card::Card(Suit suit, Value value, Board* board)
 	m_value		  = value;
 	m_board		  = board;
 	m_isOnAceSpot = false;
-	m_selected	  = false;
 
 	m_widget = new CardWidget();
 	m_widget->setCard(value, suit);
@@ -381,15 +380,7 @@ void Card::select()
  */
 void Card::setSelected(bool selected)
 {
-	m_selected = selected;
-	if (m_selected)
-	{
-	//	m_widget->setStyleSheet("CardWidget {background-color:white;border: 2px solid yellow;border-radius:5px;}");
-	}
-	else
-	{
-	//	m_widget->setStyleSheet("CardWidget {background-color:white;border: 2px solid black;border-radius:5px;}");
-	}
+	m_widget->setSelected(selected);
 }
 
 /*!
@@ -398,7 +389,7 @@ void Card::setSelected(bool selected)
  */
 bool Card::isSelected()
 {
-	return m_selected;
+	return m_widget->selected();
 }
 
 /*!

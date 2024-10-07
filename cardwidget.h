@@ -36,7 +36,9 @@ public:
 
 	explicit CardWidget(QWidget* parent = nullptr);
 	void setCard(Card::Value value, Card::Suit suit);
+	void setSelected(bool selected);
 
+	[[nodiscard]] bool		  selected() const;
 	[[nodiscard]] Card::Value value() const noexcept;
 	[[nodiscard]] Card::Suit  suit() const noexcept;
 
@@ -49,6 +51,7 @@ protected:
 	Card::Value m_value;
 	Card::Suit	m_suit;
 	QPixmap		m_backgroundImage;
+	bool		m_selected = false;
 };
 
 #endif // CARDWIDGET_H

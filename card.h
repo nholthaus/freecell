@@ -112,7 +112,6 @@ protected:
 	CardProxy*	m_proxy;
 
 	QPoint m_position;
-	bool   m_selected;
 
 	bool m_isOnAceSpot;
 };

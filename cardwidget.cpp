@@ -91,10 +91,28 @@ void CardWidget::paintEvent(QPaintEvent* event)
 	style()->drawPrimitive(QStyle::PE_Frame, &opt, &painter, this);
 
 	// Step 4: Draw a 1px black border
-	QPen pen(Qt::darkGray, 1);  // 1px black border
-	painter.setPen(pen);
+	if(!m_selected)
+	{
+		QPen pen(Qt::darkGray, 1); // 1px black border
+		painter.setPen(pen);
+	}
+	else
+	{
+		QPen pen(Qt::darkGray, 1); // change this color if you want to debug selections. It looks bad in prod.
+		painter.setPen(pen);
+	}
 	painter.drawPath(path);
 
 	// Call the base class implementation to draw child widgets
 	QFrame::paintEvent(event);
+}
+
+bool CardWidget::selected() const
+{
+	return m_selected;
+}
+
+void CardWidget::setSelected(bool selected)
+{
+	m_selected = selected;
 }

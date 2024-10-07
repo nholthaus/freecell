@@ -47,9 +47,13 @@ void CardProxy::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
 	if (event->button() == Qt::LeftButton)
 	{
-		if (!mCard->isSelected() && mCard->isMovable() && mCard->isValidParentOfAllChildren())
-		{
+		if(!mCard->isSelected())
 			mCard->select();
+		else
+			mCard->setSelected(false);
+
+		if (mCard->isMovable() && mCard->isValidParentOfAllChildren())
+		{
 			event->setAccepted(true);
 			return;
 		}
