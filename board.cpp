@@ -191,15 +191,6 @@ bool Board::hasEnoughFreecells(int cardsToMove)
 	return cardsToMove <= (countFreeCells() + 1) * (int)pow(2, countEmptyColumns());
 }
 
-void Board::freeCard(Card* card)
-{
-	Card* cell = 0; // getFreeCell(); // TODO: NMH this is wrong
-	if (cell)
-	{
-		cell = card;
-	}
-}
-
 void Board::automaticMove(Card* card)
 {
 	// See if it's an ACE

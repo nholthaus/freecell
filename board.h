@@ -46,7 +46,6 @@ public:
     void dealCards();
     void collectCards();
 
-    void freeCard(Card* card);
     int countFreeCells();
 	int countEmptyColumns();
     bool hasEnoughFreecells(int cardsToMove);
