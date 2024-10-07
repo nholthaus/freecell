@@ -47,7 +47,7 @@ target_sources(${PROJECT_NAME} PRIVATE
                )
 
 # Add Qt resource file
-qt6_add_resources(RESOURCE_FILES resources/resources.qrc)
+qt6_add_resources(RESOURCE_FILES ${CMAKE_SOURCE_DIR}/resources/resources.qrc)
 target_sources(${PROJECT_NAME} PRIVATE ${RESOURCE_FILES})
 
 # Link necessary Qt libraries to the executable

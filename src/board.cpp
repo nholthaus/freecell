@@ -108,12 +108,14 @@ void Board::addItem(QGraphicsProxyWidget* proxy)
 	mScene->addItem(proxy);
 }
 
-void Board::dealCards()
+void Board::dealCards(unsigned int gameNumber)
 {
 	Card* card;
 	int	  i = 0, col = 0;
 
-	mDeck->shuffle();
+	mDeck->build(this);
+	mDeck->shuffle(gameNumber);
+
 	while (!mDeck->empty())
 	{
 		card = mDeck->drawCard();

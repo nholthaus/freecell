@@ -63,6 +63,7 @@ public:
 public:
 
 	Card(Suit suit, Value value, Board* board);
+	~Card() override;
 
 	void setParent(AbstractCardHolder*, bool = false);
 	int	 countChildren();

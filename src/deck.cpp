@@ -35,7 +35,7 @@ Deck::Deck(Board* board) { build(board); }
  */
 void Deck::shuffle(unsigned int seed)
 {
-	std::mt19937	   generator = seed ? std::mt19937{seed} : std::mt19937{std::random_device{}()};
+	std::mt19937	   generator{seed};
 	std::shuffle(mCards.begin(), mCards.end(), generator);
 }
 
@@ -49,6 +49,11 @@ void Deck::shuffle(unsigned int seed)
  */
 void Deck::build(Board* board)
 {
+	for(auto* card : mCards)
+	{
+		if(card)
+			card->deleteLater();
+	}
 	mCards.clear();
 
 	for (auto i = static_cast<Card::Suit>(1); i < Card::Suit::LASTSUIT; ++i)

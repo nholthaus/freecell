@@ -43,7 +43,7 @@ public:
 public:
     Board();
 
-    void dealCards();
+	void dealCards(unsigned int gameNumber);
     void collectCards();
 
     int countFreeCells();

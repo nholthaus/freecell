@@ -18,6 +18,7 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QMenuBar>
+#include <random>
 #include "board.h"
 
 /*!
@@ -29,6 +30,7 @@ MainWindow::MainWindow(QWidget* parent)
 {
 	auto* gameMenu = new QMenu("Game");
 	gameMenu->addAction("New Game", Qt::Key_F2, this, SLOT(newGame()));
+	gameMenu->addAction("Restart Game", Qt::Key_F5, this, SLOT(restartGame()));
 	gameMenu->addSeparator();
 	auto* relaxedAction = gameMenu->addAction("Relaxed", this, [this](bool value) { m_board->setRelaxed(value); });
 	relaxedAction->setCheckable(true);
@@ -50,8 +52,23 @@ MainWindow::MainWindow(QWidget* parent)
  */
 void MainWindow::newGame()
 {
+	// finish any ongoing game
 	endGame();
-	m_board->dealCards();
+
+	// generate random game number
+	std::random_device randomDevice;
+	std::uniform_int_distribution<unsigned int> gameNumberDistribution(1'000'000, 9'999'999);
+	m_gameNumber = gameNumberDistribution(randomDevice);
+
+	// deal the cards
+	m_board->dealCards(m_gameNumber);
+}
+
+/// @brief restart the current game
+void MainWindow::restartGame()
+{
+	endGame();
+	m_board->dealCards(m_gameNumber);
 }
 
 /*!

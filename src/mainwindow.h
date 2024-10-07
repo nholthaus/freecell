@@ -27,18 +27,22 @@ class Board;
  */
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+
+	explicit MainWindow(QWidget* parent = nullptr);
 
 signals:
 
 public slots:
-    void newGame();
-    void endGame();
+	void newGame();
+	void restartGame();
+	void endGame();
 
 protected:
-    Board* m_board;
+
+	unsigned int m_gameNumber = 0;
+	Board*		 m_board;
 };
 
 #endif // MAINWINDOW_H

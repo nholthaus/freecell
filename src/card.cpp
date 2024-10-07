@@ -50,6 +50,11 @@ Card::Card(Suit suit, Value value, Board* board)
 	m_board->addItem(m_proxy);
 }
 
+Card::~Card()
+{
+	delete m_widget;
+}
+
 /*!
  * \brief Get a string for displaying the card's identity
  * \return QString

@@ -31,6 +31,7 @@ class Deck
 public:
     explicit Deck(Board* board);
 
+    void build(Board* board);
     void shuffle(unsigned int seed = 0);
     Card* drawCard();
     void pushCard(Card*);
@@ -39,7 +40,6 @@ public:
 	bool empty() const noexcept;
 
 protected:
-    void build(Board* board);
 
     std::vector<Card*> mCards;
 
