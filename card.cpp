@@ -272,7 +272,7 @@ void Card::animatePosition(QPoint pos)
 	animation->setEndValue(m_position);
 	animation->start(QAbstractAnimation::DeleteWhenStopped);
 
-	QObject::connect(animation, SIGNAL(finished()), this, SLOT(resetZIndex()));
+	QObject::connect(animation, SIGNAL(finished()), this, SLOT(resetZIndex()), Qt::QueuedConnection);
 
 	if (m_child)
 	{
@@ -340,11 +340,11 @@ int Card::getZIndex()
  */
 void Card::setZIndex(int index, bool cascade)
 {
-	m_proxy->setZValue(index);
 	if (m_child && cascade)
 	{
 		m_child->setZIndex(index + 1);
 	}
+	m_proxy->setZValue(index);
 }
 
 void Card::resetZIndex()
