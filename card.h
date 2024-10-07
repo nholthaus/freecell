@@ -47,9 +47,9 @@ public:
 
 	enum Suit : int
 	{
-		HEARTS	 = 1,
-		CLUBS	 = 2,
-		DIAMONDS = 3,
+		CLUBS	 = 1,
+		DIAMONDS = 2,
+		HEARTS	 = 3,
 		SPADES	 = 4,
 		LASTSUIT
 	};

@@ -29,13 +29,14 @@ class Card;
 class Deck
 {
 public:
-    Deck(Board* board);
+    explicit Deck(Board* board);
 
-    void shuffle();
+    void shuffle(unsigned int seed = 0);
     Card* drawCard();
     void pushCard(Card*);
 
     int getSize();
+	bool empty() const noexcept;
 
 protected:
     void build(Board* board);

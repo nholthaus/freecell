@@ -33,11 +33,9 @@ Deck::Deck(Board* board) { build(board); }
  * The cards are randomly reordered in the deck. Any number of cards can be
  * present in the deck.
  */
-void Deck::shuffle()
+void Deck::shuffle(unsigned int seed)
 {
-	std::random_device randomDevice;
-	std::mt19937	   generator(randomDevice());
-
+	std::mt19937	   generator = seed ? std::mt19937{seed} : std::mt19937{std::random_device{}()};
 	std::shuffle(mCards.begin(), mCards.end(), generator);
 }
 
@@ -53,7 +51,7 @@ void Deck::build(Board* board)
 {
 	mCards.clear();
 
-	for (Card::Suit i = Card::Suit::HEARTS; i < Card::Suit::LASTSUIT; ++i)
+	for (auto i = static_cast<Card::Suit>(1); i < Card::Suit::LASTSUIT; ++i)
 	{
 		for (Card::Value j = Card::Value::ACE; j < Card::Value::LASTVALUE; ++j)
 		{
@@ -85,3 +83,12 @@ void Deck::pushCard(Card* card) { mCards.push_back(card); }
  * \return The size (int)
  */
 int Deck::getSize() { return mCards.size(); }
+
+/*!
+ * \brief Whether the deck is empty of cards
+ * \return true if empty
+ */
+bool Deck::empty() const noexcept
+{
+	return mCards.empty();
+}

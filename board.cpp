@@ -114,7 +114,7 @@ void Board::dealCards()
 	int	  i = 0, col = 0;
 
 	mDeck->shuffle();
-	while (mDeck->getSize())
+	while (!mDeck->empty())
 	{
 		card = mDeck->drawCard();
 		QPoint pos((i % NB_COLUMNS) * CardWidget::WIDTH, (i / NB_COLUMNS) * CardWidget::HEIGHT / 8);
@@ -139,9 +139,9 @@ void Board::collectCards()
 {
 	Card* card;
 
-	for (int i = 0; i < NB_COLUMNS; i++)
+	for (auto& mLeafColumn : mLeafColumns)
 	{
-		mLeafColumns[i] = 0;
+		mLeafColumn = nullptr;
 	}
 
 	while (!mCards.empty())
@@ -185,7 +185,7 @@ int Board::countEmptyColumns()
 
 bool Board::hasEnoughFreecells(int cardsToMove)
 {
-	if(mRelaxed)
+	if (mRelaxed)
 		return true;
 
 	return cardsToMove <= (countFreeCells() + 1) * (int)pow(2, countEmptyColumns());
@@ -202,37 +202,40 @@ void Board::freeCard(Card* card)
 
 void Board::automaticMove(Card* card)
 {
+	// See if it's an ACE
 	if (tryAutomaticAceMove(card))
 	{
 		return;
 	}
 
+	// if not, try to move its stack to the bottom of a column
 	AbstractCardHolder* bottomSpot;
-	if (!card->isStackable())
+	for (auto& mColumn : mColumns)
 	{
-		for (auto& mColumn : mColumns)
+		bottomSpot = mColumn;
+		while (bottomSpot->getChild())
 		{
-			bottomSpot = mColumn;
-			while (bottomSpot->getChild())
-			{
-				// get the bottom card of the column
-				bottomSpot = bottomSpot->getChild();
-			}
-			if (bottomSpot->canStackCard(card))
-			{
-				card->setParent(bottomSpot, true);
-				return;
-			}
+			// get the bottom card of the column
+			bottomSpot = bottomSpot->getChild();
+		}
+		if (bottomSpot->canStackCard(card) && hasEnoughFreecells(card->countChildren()))
+		{
+			card->setParent(bottomSpot, true);
+			return;
 		}
 	}
 
-	std::vector<Freecell*>::iterator itFreecell;
-	for (itFreecell = mFreeCells.begin(); itFreecell < mFreeCells.end(); itFreecell++)
+	// lastly, move it to a free cell IF it doesn't have children
+	if (!card->getChild())
 	{
-		if ((*itFreecell)->isEmpty())
+		std::vector<Freecell*>::iterator itFreecell;
+		for (itFreecell = mFreeCells.begin(); itFreecell < mFreeCells.end(); itFreecell++)
 		{
-			card->setParent(*itFreecell, true);
-			return;
+			if ((*itFreecell)->isEmpty())
+			{
+				card->setParent(*itFreecell, true);
+				return;
+			}
 		}
 	}
 }
@@ -242,7 +245,7 @@ bool Board::tryAutomaticAceMove(Card* card)
 	if (card)
 	{
 		std::vector<AceSpot*>::iterator itAce;
-		AbstractCardHolder*				holder = 0;
+		AbstractCardHolder*				holder = nullptr;
 		for (itAce = mAceSpots.begin(); itAce < mAceSpots.end(); itAce++)
 		{
 			holder = *itAce;

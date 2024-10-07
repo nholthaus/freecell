@@ -36,10 +36,10 @@ CardProxy::CardProxy(Card* card)
 
 void CardProxy::mouseDoubleClickEvent(QGraphicsSceneMouseEvent* event)
 {
-	if (!mCard->getChild())
-	{
+//	if (!mCard->getChild())
+//	{
 		mCard->automaticMove();
-	}
+//	}
 }
 
 /*!
