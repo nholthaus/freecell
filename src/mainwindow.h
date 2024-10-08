@@ -36,6 +36,7 @@ signals:
 
 public slots:
 	void newGame();
+	void selectGame();
 	void restartGame();
 	void endGame();
 

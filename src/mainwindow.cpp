@@ -16,10 +16,13 @@
  */
 
 #include "mainwindow.h"
-#include <QApplication>
-#include <QMenuBar>
-#include <random>
 #include "board.h"
+
+#include <QApplication>
+#include <QInputDialog >
+#include <QMenuBar>
+#include <QToolTip>
+#include <random>
 
 /*!
  * \brief Constructor
@@ -30,9 +33,10 @@ MainWindow::MainWindow(QWidget* parent)
 {
 	auto* gameMenu = new QMenu("Game");
 	gameMenu->addAction("New Game", Qt::Key_F2, this, SLOT(newGame()));
+	gameMenu->addAction("Select Game...", Qt::Key_F4, this, SLOT(selectGame()));
 	gameMenu->addAction("Restart Game", Qt::Key_F5, this, SLOT(restartGame()));
 	gameMenu->addSeparator();
-	auto* relaxedAction = gameMenu->addAction("Relaxed", this, [this](bool value) { m_board->setRelaxed(value); });
+	auto* relaxedAction = gameMenu->addAction("Relaxed Mode", this, [this](bool value) { m_board->setRelaxed(value); });
 	relaxedAction->setCheckable(true);
 	gameMenu->addSeparator();
 	gameMenu->addAction("E&xit", qApp, SLOT(quit()));
@@ -62,6 +66,18 @@ void MainWindow::newGame()
 
 	// deal the cards
 	m_board->dealCards(m_gameNumber);
+}
+
+
+void MainWindow::selectGame()
+{
+	bool ok = false;
+	m_gameNumber = QInputDialog::getInt(this, "Select Game #", "Game #:",m_gameNumber,1'000'000, 9'999'999, 1, &ok);
+	if(ok)
+	{
+		endGame();
+		m_board->dealCards(m_gameNumber);
+	}
 }
 
 /// @brief restart the current game

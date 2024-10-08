@@ -18,8 +18,8 @@
 #ifndef BOARD_H
 #define BOARD_H
 
-#include <vector>
 #include <QObject>
+#include <vector>
 
 #include "card.h"
 #include "deck.h"
@@ -35,53 +35,58 @@ class BoardScene;
 
 class Board : public QObject
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
 
 	static constexpr int SPACING = 15;
 
 public:
-    Board();
+
+	Board();
 
 	void dealCards(unsigned int gameNumber);
-    void collectCards();
+	void collectCards();
 
-    int countFreeCells();
-	int countEmptyColumns();
-    bool hasEnoughFreecells(int cardsToMove);
+	int	 countFreeCells();
+	int	 countEmptyColumns();
+	bool hasEnoughFreecells(int cardsToMove);
 
-    void automaticMove(Card*);
-    void unselectCard();
-    void selectCard(Card*);
+	void automaticMove(Card*);
+	void unselectCard();
+	void selectCard(Card*);
 
-    void setSelectedCard(Card*);
-    Card* getSelectedCard();
-    void addItem(QGraphicsProxyWidget*);
+	void  setSelectedCard(Card*);
+	Card* getSelectedCard();
+	void  addItem(QGraphicsProxyWidget*);
 
 	void setRelaxed(bool value);
 	bool isRelaxed() const noexcept;
 
-    QWidget* getBoardWidget();
+	QWidget* getBoardWidget();
 
 public slots:
-    bool tryAutomaticAceMove(Card* card = 0);
+	bool tryAutomaticAceMove(Card* card = 0);
 
 protected:
-    std::vector<AceSpot*> mAceSpots;
-    std::vector<Freecell*> mFreeCells;
 
-    const static int NB_COLUMNS = 8;
-    Card* mLeafColumns[NB_COLUMNS];
-    ColumnSpot* mColumns[NB_COLUMNS];
+	std::vector<AceSpot*>  mAceSpots;
+	std::vector<Freecell*> mFreeCells;
 
-    Deck* mDeck;
-    QGraphicsView *mBoardWidget;
-    BoardScene* mScene;
+	const static int NB_COLUMNS = 8;
+	Card*			 mLeafColumns[NB_COLUMNS];
+	ColumnSpot*		 mColumns[NB_COLUMNS];
 
-    Card* mSelectedCard;
-    std::vector<Card*> mCards;
+	Deck*		   mDeck;
+	QGraphicsView* mBoardWidget;
+	BoardScene*	   mScene;
 
-	bool mRelaxed = false;
+	Card*			   mSelectedCard;
+	std::vector<Card*> mCards;
+
+	QGraphicsProxyWidget* mGameNumberProxy = nullptr;
+
+	bool		 mRelaxed	 = false;
+	unsigned int mGameNumber = 0;
 };
 
 #endif // BOARD_H

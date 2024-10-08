@@ -96,6 +96,16 @@ Board::Board()
 	}
 
 	mDeck = new Deck(this);
+
+	auto* gameNumberLabel = new QLabel("Game #: 0");
+	gameNumberLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
+	gameNumberLabel->setFixedWidth(2 * CardWidget::WIDTH);
+	gameNumberLabel->setFixedHeight(46);
+		gameNumberLabel->setStyleSheet("color: rgba(255, 255, 255, 48); background-color: rgba(0, 100, 0, 25); font: 'Bookman Old Style' bold; font-size: 32px; "
+								   "border: 6px solid rgba(0, 100, 0, 255); border-radius: 15px");
+
+	mGameNumberProxy = mScene->addWidget(gameNumberLabel);
+	mGameNumberProxy->setPos(QPointF(mScene->width() / 2 - gameNumberLabel->width() / 2, mScene->height() - gameNumberLabel->height() - 2 * SPACING));
 }
 
 QWidget* Board::getBoardWidget()
@@ -113,8 +123,11 @@ void Board::dealCards(unsigned int gameNumber)
 	Card* card;
 	int	  i = 0, col = 0;
 
-	mDeck->build(this);
+	mDeck->build(this); // NMH: TODO don't rebuild the deck unless restarting the same game
 	mDeck->shuffle(gameNumber);
+
+	if(auto* label = dynamic_cast<QLabel*>(mGameNumberProxy->widget()); label)
+		label->setText(QString("Game #: %1").arg(gameNumber));
 
 	while (!mDeck->empty())
 	{
