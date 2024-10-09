@@ -147,6 +147,8 @@ void Board::dealCards(unsigned int gameNumber)
 
 		mCards.push_back(card);
 		card->show();
+
+		QObject::connect(card, &Card::moved, this, &Board::onCardMoved);
 	}
 }
 
@@ -289,6 +291,25 @@ bool Board::tryAutomaticAceMove(Card* card)
 		}
 	}
 	return false;
+}
+
+void Board::onCardMoved(Move move)
+{
+	mMoves.push_back(move);
+}
+
+void Board::onUndo()
+{
+	if(!mMoves.empty())
+	{
+		auto move = mMoves.back();
+		mMoves.pop_back();
+
+		move.card()->blockSignals(true);
+		move.card()->setOnAceSpot(false);
+		move.card()->setParent(move.previousParent(), true);
+		move.card()->blockSignals(false);
+	}
 }
 
 void Board::unselectCard()

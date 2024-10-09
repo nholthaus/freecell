@@ -65,7 +65,9 @@ public:
 	QWidget* getBoardWidget();
 
 public slots:
-	bool tryAutomaticAceMove(Card* card = 0);
+	bool tryAutomaticAceMove(Card* card = nullptr);
+	void onCardMoved(Move move);
+	void onUndo();
 
 protected:
 

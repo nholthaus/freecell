@@ -31,22 +31,25 @@
 MainWindow::MainWindow(QWidget* parent)
 	: QMainWindow(parent)
 {
-	auto* gameMenu = new QMenu("Game");
-	gameMenu->addAction("New Game", Qt::Key_F2, this, SLOT(newGame()));
-	gameMenu->addAction("Select Game...", Qt::Key_F4, this, SLOT(selectGame()));
-	gameMenu->addAction("Restart Game", Qt::Key_F5, this, SLOT(restartGame()));
-	gameMenu->addSeparator();
-	auto* relaxedAction = gameMenu->addAction("Relaxed Mode", this, [this](bool value) { m_board->setRelaxed(value); });
-	relaxedAction->setCheckable(true);
-	gameMenu->addSeparator();
-	gameMenu->addAction("E&xit", qApp, SLOT(quit()));
-	menuBar()->addMenu(gameMenu);
 
 	setWindowTitle("Freecell");
 	setWindowIcon(QIcon(":/icons/freecell"));
 
 	m_board = new Board();
 	setCentralWidget(m_board->getBoardWidget());
+
+	auto* gameMenu = new QMenu("Game");
+	gameMenu->addAction("New Game", Qt::Key_F2, this, SLOT(newGame()));
+	gameMenu->addAction("Select Game...", Qt::Key_F4, this, SLOT(selectGame()));
+	gameMenu->addAction("Restart Game", Qt::Key_F5, this, SLOT(restartGame()));
+	gameMenu->addSeparator();
+	gameMenu->addAction("Undo Last Move", QKeySequence(QKeySequence::Undo), m_board, &Board::onUndo, Qt::QueuedConnection);
+	gameMenu->addSeparator();
+	auto* relaxedAction = gameMenu->addAction("Relaxed Mode", this, [this](bool value) { m_board->setRelaxed(value); });
+	relaxedAction->setCheckable(true);
+	gameMenu->addSeparator();
+	gameMenu->addAction("E&xit", qApp, SLOT(quit()));
+	menuBar()->addMenu(gameMenu);
 
 	newGame();
 }

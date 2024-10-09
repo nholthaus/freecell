@@ -23,6 +23,13 @@
 //      MEMBER FUNCTIONS
 //======================================================================================================================
 
+Move::Move(Card* card, AbstractCardHolder* parent, AbstractCardHolder* previousParent)
+	: m_card(card)
+	, m_parent(parent)
+	, m_previousParent(previousParent)
+{
+}
+
 Card* Move::card() const
 {
 	return m_card;

@@ -35,9 +35,9 @@ public:
 
 	Move(Card* card, AbstractCardHolder* parent, AbstractCardHolder* previousParent);
 
-	Card*				card() const;
-	AbstractCardHolder* parent() const;
-	AbstractCardHolder* previousParent() const;
+	[[nodiscard]] Card*				  card() const;
+	[[nodiscard]] AbstractCardHolder* parent() const;
+	[[nodiscard]] AbstractCardHolder* previousParent() const;
 
 private:
 

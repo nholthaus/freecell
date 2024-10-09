@@ -21,6 +21,8 @@
 #include <algorithm>
 #include <random>
 
+#include "board.h"
+
 /*!
  * \brief Constructor
  * \param board The board
@@ -60,7 +62,8 @@ void Deck::build(Board* board)
 	{
 		for (Card::Value j = Card::Value::ACE; j < Card::Value::LASTVALUE; ++j)
 		{
-			pushCard(new Card(i, j, board));
+			auto card = new Card(i, j, board);
+			pushCard(card);
 		}
 	}
 }
