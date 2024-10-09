@@ -62,7 +62,7 @@ Board::Board()
 	mBoardWidget->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	qreal minWidth	= 9 * CardWidget::WIDTH + 12 * SPACING;
-	qreal minHeight = 4 * CardWidget::HEIGHT + 10 * SPACING;
+	qreal minHeight = 4 * CardWidget::HEIGHT + 4 * SPACING;
 
 	mScene = new BoardScene(QRectF(QPointF(0, 0), QPointF(minWidth, minHeight)), mBoardWidget);
 	mBoardWidget->setAlignment(Qt::AlignTop | Qt::AlignCenter);
@@ -75,7 +75,7 @@ Board::Board()
 	for (i = 0; i < 4; i++)
 	{
 		freecell = new Freecell(this);
-		freecell->setPosition(QPointF(i * (CardWidget::WIDTH + SPACING) + 2 * SPACING, 2 * SPACING));
+		freecell->setPosition(QPointF(i * (CardWidget::WIDTH + SPACING) + 2 * SPACING, SPACING));
 		mFreeCells.push_back(freecell);
 	}
 
@@ -83,7 +83,7 @@ Board::Board()
 	for (i = 0; i < 4; i++)
 	{
 		aceSpot = new AceSpot(this, static_cast<Card::Suit>(i + 1));
-		aceSpot->setPosition(QPointF((5 + i) * (CardWidget::WIDTH + SPACING) + 2 * SPACING, 2 * SPACING));
+		aceSpot->setPosition(QPointF((5 + i) * (CardWidget::WIDTH + SPACING) + 2 * SPACING, SPACING));
 		mAceSpots.push_back(aceSpot);
 	}
 
@@ -91,7 +91,7 @@ Board::Board()
 	for (i = 0; i < NB_COLUMNS; i++)
 	{
 		columnSpot = new ColumnSpot(this);
-		columnSpot->setPosition(QPointF((0.5 + i) * (CardWidget::WIDTH + SPACING) + 2 * SPACING, 6 * SPACING + CardWidget::HEIGHT));
+		columnSpot->setPosition(QPointF((0.5 + i) * (CardWidget::WIDTH + SPACING) + 2 * SPACING, 2 * SPACING + CardWidget::HEIGHT));
 		mColumns[i] = columnSpot;
 	}
 
@@ -101,11 +101,11 @@ Board::Board()
 	gameNumberLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 	gameNumberLabel->setFixedWidth(2 * CardWidget::WIDTH);
 	gameNumberLabel->setFixedHeight(46);
-		gameNumberLabel->setStyleSheet("color: rgba(255, 255, 255, 48); background-color: rgba(0, 100, 0, 25); font: 'Bookman Old Style' bold; font-size: 32px; "
+		gameNumberLabel->setStyleSheet("color: rgba(255, 255, 255, 48); background-color: rgba(0, 100, 0, 25); font: 'Bookman Old Style' bold; font-size: 24px; "
 								   "border: 6px solid rgba(0, 100, 0, 255); border-radius: 15px");
 
 	mGameNumberProxy = mScene->addWidget(gameNumberLabel);
-	mGameNumberProxy->setPos(QPointF(mScene->width() / 2 - gameNumberLabel->width() / 2, mScene->height() - gameNumberLabel->height() - 2 * SPACING));
+	mGameNumberProxy->setPos(QPointF(mScene->width() / 2 - gameNumberLabel->width() / 2, mScene->height() - gameNumberLabel->height() - SPACING));
 }
 
 QWidget* Board::getBoardWidget()

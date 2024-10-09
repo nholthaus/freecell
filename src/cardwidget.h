@@ -27,8 +27,8 @@ class CardWidget : public QFrame
 	Q_OBJECT
 public:
 
-	constexpr static int WIDTH		   = 150;
-	constexpr static int HEIGHT		   = 210;
+	constexpr static int WIDTH		   = 130;
+	constexpr static int HEIGHT		   = 182;
 	constexpr static int BORDER_RADIUS = 15;
 	constexpr static int MARGIN		   = 5;
 
