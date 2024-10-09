@@ -7,8 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY bin)
 
 # Find required Qt modules
+message(STATUS "Qt6 DIR: $ENV{Qt6_DIR}")
 set(CMAKE_PREFIX_PATH $ENV{Qt6_DIR})
-find_package(Qt6 REQUIRED COMPONENTS Widgets Core)
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets HINTS /opt/Qt/*/gcc_64)
 qt_standard_project_setup()
 
 # Add the executable

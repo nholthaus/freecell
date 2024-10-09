@@ -19,7 +19,7 @@
 #include "board.h"
 
 #include <QApplication>
-#include <QInputDialog >
+#include <QInputDialog>
 #include <QMenuBar>
 #include <QToolTip>
 #include <random>
