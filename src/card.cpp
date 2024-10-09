@@ -71,11 +71,18 @@ QString Card::getLabel()
  */
 void Card::setParent(AbstractCardHolder* parent, bool animate)
 {
+	if(parent != m_parent)
+	{
+		emit this->moved(this, parent, m_parent);
+	}
+
 	if (m_parent)
 	{
 		m_parent->setChild(nullptr);
 	}
+
 	m_parent = parent;
+
 	if (m_parent)
 	{
 		m_parent->setChild(this);

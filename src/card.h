@@ -22,6 +22,7 @@
 #include <QMetaEnum>
 
 #include "abstractcardholder.h"
+#include "move.h"
 
 class CardWidget;
 class CardProxy;
@@ -99,6 +100,9 @@ public:
 	bool isSelected();
 	void setSelected(bool selected);
 	void automaticMove();
+
+signals:
+	void moved(Move move);
 
 public slots:
 	void resetZIndex();

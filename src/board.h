@@ -83,6 +83,8 @@ protected:
 	Card*			   mSelectedCard;
 	std::vector<Card*> mCards;
 
+	std::vector<Move> mMoves;
+
 	QGraphicsProxyWidget* mGameNumberProxy = nullptr;
 
 	bool		 mRelaxed	 = false;

@@ -28,6 +28,8 @@ add_executable(${PROJECT_NAME}
                acespot.cpp
                mainwindow.cpp
                boardscene.cpp
+               move.cpp
+               move.h
                )
 
 # Add header files (optional, but helps IDEs like CLion)
