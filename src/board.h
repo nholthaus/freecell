@@ -90,6 +90,7 @@ protected:
 	std::deque<Move> mUndoMoves;
 	std::deque<Move> mRedoMoves;
 
+	QGraphicsProxyWidget* mNewGameProxy = nullptr;
 	QGraphicsProxyWidget* mGameNumberProxy = nullptr;
 	QGraphicsProxyWidget* mUndoProxy = nullptr;
 

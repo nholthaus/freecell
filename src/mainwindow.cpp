@@ -40,12 +40,12 @@ MainWindow::MainWindow(QWidget* parent)
 	setCentralWidget(m_board->getBoardWidget());
 
 	auto* gameMenu = new QMenu("Game");
-	gameMenu->addAction("New Game", Qt::Key_F2, this, SLOT(newGame()));
+	gameMenu->addAction(QIcon(":/icons/freecell_ico_white"), "New Game", Qt::Key_F2, this, SLOT(newGame()));
 	gameMenu->addAction("Select Game...", Qt::Key_F4, this, SLOT(selectGame()));
 	gameMenu->addAction("Restart Game", Qt::Key_F5, this, SLOT(restartGame()));
 	gameMenu->addSeparator();
 	gameMenu->addAction(QIcon(":/icons/undo"), "Undo Last Move", QKeySequence(QKeySequence::Undo), m_board, &Board::onUndo, Qt::QueuedConnection);
-	gameMenu->addAction("Redo Last Move", QKeySequence(QKeySequence::Redo), m_board, &Board::onRedo, Qt::QueuedConnection);
+	gameMenu->addAction(QIcon(":/icons/redo"),"Redo Last Move", QKeySequence(QKeySequence::Redo), m_board, &Board::onRedo, Qt::QueuedConnection);
 	gameMenu->addSeparator();
 	auto* relaxedAction = gameMenu->addAction("Relaxed Mode", QKeySequence(Qt::ALT | Qt::Key_R), this, [this](bool value) { m_board->setRelaxed(value); });
 	relaxedAction->setCheckable(true);

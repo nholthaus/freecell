@@ -103,6 +103,13 @@ Board::Board()
 
 	mDeck = new Deck(this);
 
+	auto* newGameButton = new Button();
+	newGameButton->setText("New Game");
+//	connect(newGameButton, &Button::clicked, this, &Board::);
+
+	mNewGameProxy = mScene->addWidget(newGameButton);
+	mNewGameProxy->setPos(QPointF(2 * SPACING + CardWidget::WIDTH / 2, mScene->height() - newGameButton->height() - SPACING));
+
 	auto* gameNumberLabel = new QLabel("Game #: 0");
 	gameNumberLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 	gameNumberLabel->setFixedWidth(2 * CardWidget::WIDTH);

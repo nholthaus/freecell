@@ -2,7 +2,9 @@
     <qresource prefix="/icons">
         <file alias="freecell">icons/freecell.png</file>
         <file alias="freecell_ico">icons/freecell_ico.png</file>
+        <file alias="freecell_ico_white">icons/freecell_ico_white.png</file>
         <file alias="undo">icons/undo_icon_white.png</file>
+        <file alias="redo">icons/redo_icon_white.png</file>
     </qresource>
     <qresource prefix="/images">
         <file alias="background">images/green_felt.jpg</file>
