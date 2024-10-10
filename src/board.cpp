@@ -101,7 +101,7 @@ Board::Board()
 	gameNumberLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 	gameNumberLabel->setFixedWidth(2 * CardWidget::WIDTH);
 	gameNumberLabel->setFixedHeight(46);
-		gameNumberLabel->setStyleSheet("color: rgba(255, 255, 255, 48); background-color: rgba(0, 100, 0, 25); font: 'Bookman Old Style' bold; font-size: 24px; "
+		gameNumberLabel->setStyleSheet("color: rgba(255, 255, 255, 64); background-color: rgba(0, 100, 0, 25); font: 'Bookman Old Style' bold; font-size: 24px; "
 								   "border: 6px solid rgba(0, 100, 0, 255); border-radius: 15px");
 
 	mGameNumberProxy = mScene->addWidget(gameNumberLabel);

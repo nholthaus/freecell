@@ -46,11 +46,17 @@ MainWindow::MainWindow(QWidget* parent)
 	gameMenu->addAction("Undo Last Move", QKeySequence(QKeySequence::Undo), m_board, &Board::onUndo, Qt::QueuedConnection);
 	gameMenu->addAction("Redo Last Move", QKeySequence(QKeySequence::Redo), m_board, &Board::onRedo, Qt::QueuedConnection);
 	gameMenu->addSeparator();
-	auto* relaxedAction = gameMenu->addAction("Relaxed Mode", this, [this](bool value) { m_board->setRelaxed(value); });
+	auto* relaxedAction = gameMenu->addAction("Relaxed Mode", QKeySequence(Qt::ALT | Qt::Key_R), this, [this](bool value) { m_board->setRelaxed(value); });
 	relaxedAction->setCheckable(true);
 	gameMenu->addSeparator();
 	gameMenu->addAction("E&xit", qApp, SLOT(quit()));
+
+	auto* viewMenu = new QMenu("View");
+	auto* fullscreenAction = viewMenu->addAction("Fullscreen", QKeySequence(QKeySequence::FullScreen), this, [this]{ this->isFullScreen() ? this->showNormal() : this->showFullScreen(); });
+	fullscreenAction->setCheckable(true);
+
 	menuBar()->addMenu(gameMenu);
+	menuBar()->addMenu(viewMenu);
 
 	newGame();
 }
