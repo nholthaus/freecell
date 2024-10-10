@@ -44,6 +44,7 @@ MainWindow::MainWindow(QWidget* parent)
 	gameMenu->addAction("Restart Game", Qt::Key_F5, this, SLOT(restartGame()));
 	gameMenu->addSeparator();
 	gameMenu->addAction("Undo Last Move", QKeySequence(QKeySequence::Undo), m_board, &Board::onUndo, Qt::QueuedConnection);
+	gameMenu->addAction("Redo Last Move", QKeySequence(QKeySequence::Redo), m_board, &Board::onRedo, Qt::QueuedConnection);
 	gameMenu->addSeparator();
 	auto* relaxedAction = gameMenu->addAction("Relaxed Mode", this, [this](bool value) { m_board->setRelaxed(value); });
 	relaxedAction->setCheckable(true);

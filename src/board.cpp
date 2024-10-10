@@ -126,6 +126,9 @@ void Board::dealCards(unsigned int gameNumber)
 	mDeck->build(this); // NMH: TODO don't rebuild the deck unless restarting the same game
 	mDeck->shuffle(gameNumber);
 
+	mUndoMoves.clear();
+	mRedoMoves.clear();
+
 	if(auto* label = dynamic_cast<QLabel*>(mGameNumberProxy->widget()); label)
 		label->setText(QString("Game #: %1").arg(gameNumber));
 
@@ -148,7 +151,7 @@ void Board::dealCards(unsigned int gameNumber)
 		mCards.push_back(card);
 		card->show();
 
-		QObject::connect(card, &Card::moved, this, &Board::onCardMoved);
+		connect(card, &Card::moved, this, &Board::onCardMoved);
 	}
 }
 
@@ -295,20 +298,44 @@ bool Board::tryAutomaticAceMove(Card* card)
 
 void Board::onCardMoved(Move move)
 {
-	mMoves.push_back(move);
+	mUndoMoves.push_back(move);
 }
 
 void Board::onUndo()
 {
-	if(!mMoves.empty())
+	if (!mUndoMoves.empty())
 	{
-		auto move = mMoves.back();
-		mMoves.pop_back();
+		auto move = mUndoMoves.back();
+		mUndoMoves.pop_back();
 
-		move.card()->blockSignals(true);
-		move.card()->setOnAceSpot(false);
-		move.card()->setParent(move.previousParent(), true);
-		move.card()->blockSignals(false);
+		if (auto card = move.card(); card)
+		{
+			card->blockSignals(true);
+			card->setOnAceSpot(false);
+			card->setParent(move.previousParent(), true);
+			card->blockSignals(false);
+
+			mRedoMoves.push_back(move);
+		}
+	}
+}
+
+void Board::onRedo()
+{
+	if (!mRedoMoves.empty())
+	{
+		auto move = mRedoMoves.back();
+		mRedoMoves.pop_back();
+
+		if (auto card = move.card(); card)
+		{
+			card->blockSignals(true);
+			card->setOnAceSpot(false);
+			card->setParent(move.parent(), true);
+			card->blockSignals(false);
+
+			mUndoMoves.push_back(move);
+		}
 	}
 }
 

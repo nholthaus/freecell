@@ -19,6 +19,7 @@
 #define BOARD_H
 
 #include <QObject>
+#include <deque>
 #include <vector>
 
 #include "card.h"
@@ -68,6 +69,7 @@ public slots:
 	bool tryAutomaticAceMove(Card* card = nullptr);
 	void onCardMoved(Move move);
 	void onUndo();
+	void onRedo();
 
 protected:
 
@@ -85,7 +87,8 @@ protected:
 	Card*			   mSelectedCard;
 	std::vector<Card*> mCards;
 
-	std::vector<Move> mMoves;
+	std::deque<Move> mUndoMoves;
+	std::deque<Move> mRedoMoves;
 
 	QGraphicsProxyWidget* mGameNumberProxy = nullptr;
 
