@@ -36,7 +36,7 @@ public:
     Card* drawCard();
     void pushCard(Card*);
 
-    int getSize();
+    int getSize() const;
 	bool empty() const noexcept;
 
 protected:

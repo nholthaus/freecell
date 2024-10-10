@@ -299,6 +299,7 @@ bool Board::tryAutomaticAceMove(Card* card)
 void Board::onCardMoved(Move move)
 {
 	mUndoMoves.push_back(move);
+	while (tryAutomaticAceMove(nullptr));
 }
 
 void Board::onUndo()

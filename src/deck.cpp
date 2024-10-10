@@ -27,7 +27,10 @@
  * \brief Constructor
  * \param board The board
  */
-Deck::Deck(Board* board) { build(board); }
+Deck::Deck(Board* board)
+{
+	build(board);
+}
 
 /*!
  * \brief Shuffle the cards in this deck
@@ -37,8 +40,8 @@ Deck::Deck(Board* board) { build(board); }
  */
 void Deck::shuffle(unsigned int seed)
 {
-	std::mt19937	   generator{seed};
-	std::shuffle(mCards.begin(), mCards.end(), generator);
+	std::mt19937 generator{seed};
+	std::ranges::shuffle(mCards, generator);
 }
 
 /*!
@@ -51,9 +54,9 @@ void Deck::shuffle(unsigned int seed)
  */
 void Deck::build(Board* board)
 {
-	for(auto* card : mCards)
+	for (auto* card : mCards)
 	{
-		if(card)
+		if (card)
 			card->deleteLater();
 	}
 	mCards.clear();
@@ -84,13 +87,19 @@ Card* Deck::drawCard()
  * \brief Push a card at the end of the deck
  * \param card The card to add
  */
-void Deck::pushCard(Card* card) { mCards.push_back(card); }
+void Deck::pushCard(Card* card)
+{
+	mCards.push_back(card);
+}
 
 /*!
  * \brief Get the number of cards in the deck
  * \return The size (int)
  */
-int Deck::getSize() { return mCards.size(); }
+int Deck::getSize() const
+{
+	return mCards.size();
+}
 
 /*!
  * \brief Whether the deck is empty of cards
