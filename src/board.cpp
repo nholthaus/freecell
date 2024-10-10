@@ -27,6 +27,12 @@
 #include <QGraphicsView>
 #include <QPointF>
 
+#include <thread>
+
+#include "Button.h"
+
+using namespace std::chrono_literals;
+
 Board::Board()
 	: QObject()
 {
@@ -101,11 +107,19 @@ Board::Board()
 	gameNumberLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
 	gameNumberLabel->setFixedWidth(2 * CardWidget::WIDTH);
 	gameNumberLabel->setFixedHeight(46);
-		gameNumberLabel->setStyleSheet("color: rgba(255, 255, 255, 64); background-color: rgba(0, 100, 0, 25); font: 'Bookman Old Style' bold; font-size: 24px; "
+	gameNumberLabel->setStyleSheet("color: rgba(255, 255, 255, 64); background-color: rgba(0, 100, 0, 25); font: 'Bookman Old Style' bold; font-size: 24px; "
 								   "border: 6px solid rgba(0, 100, 0, 255); border-radius: 15px");
 
 	mGameNumberProxy = mScene->addWidget(gameNumberLabel);
 	mGameNumberProxy->setPos(QPointF(mScene->width() / 2 - gameNumberLabel->width() / 2, mScene->height() - gameNumberLabel->height() - SPACING));
+
+	auto* undoButton = new Button();
+	undoButton->setIcon(QIcon(":/icons/undo"));
+	undoButton->setText("UNDO");
+	connect(undoButton, &Button::clicked, this, &Board::onUndo);
+
+	mUndoProxy = mScene->addWidget(undoButton);
+	mUndoProxy->setPos(QPointF(mScene->width() - undoButton->width() - CardWidget::WIDTH / 2 - 2 * SPACING, mScene->height() - undoButton->height() - SPACING));
 }
 
 QWidget* Board::getBoardWidget()
@@ -129,7 +143,7 @@ void Board::dealCards(unsigned int gameNumber)
 	mUndoMoves.clear();
 	mRedoMoves.clear();
 
-	if(auto* label = dynamic_cast<QLabel*>(mGameNumberProxy->widget()); label)
+	if (auto* label = dynamic_cast<QLabel*>(mGameNumberProxy->widget()); label)
 		label->setText(QString("Game #: %1").arg(gameNumber));
 
 	while (!mDeck->empty())
@@ -299,7 +313,10 @@ bool Board::tryAutomaticAceMove(Card* card)
 void Board::onCardMoved(Move move)
 {
 	mUndoMoves.push_back(move);
-	while (tryAutomaticAceMove(nullptr));
+	while (tryAutomaticAceMove(nullptr))
+	{
+		std::this_thread::sleep_for(750ms);
+	};
 }
 
 void Board::onUndo()

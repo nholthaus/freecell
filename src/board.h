@@ -91,6 +91,7 @@ protected:
 	std::deque<Move> mRedoMoves;
 
 	QGraphicsProxyWidget* mGameNumberProxy = nullptr;
+	QGraphicsProxyWidget* mUndoProxy = nullptr;
 
 	bool		 mRelaxed	 = false;
 	unsigned int mGameNumber = 0;

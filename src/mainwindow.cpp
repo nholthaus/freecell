@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QInputDialog>
 #include <QMenuBar>
+#include <QStyle>
 #include <QToolTip>
 #include <random>
 
@@ -43,16 +44,17 @@ MainWindow::MainWindow(QWidget* parent)
 	gameMenu->addAction("Select Game...", Qt::Key_F4, this, SLOT(selectGame()));
 	gameMenu->addAction("Restart Game", Qt::Key_F5, this, SLOT(restartGame()));
 	gameMenu->addSeparator();
-	gameMenu->addAction("Undo Last Move", QKeySequence(QKeySequence::Undo), m_board, &Board::onUndo, Qt::QueuedConnection);
+	gameMenu->addAction(QIcon(":/icons/undo"), "Undo Last Move", QKeySequence(QKeySequence::Undo), m_board, &Board::onUndo, Qt::QueuedConnection);
 	gameMenu->addAction("Redo Last Move", QKeySequence(QKeySequence::Redo), m_board, &Board::onRedo, Qt::QueuedConnection);
 	gameMenu->addSeparator();
 	auto* relaxedAction = gameMenu->addAction("Relaxed Mode", QKeySequence(Qt::ALT | Qt::Key_R), this, [this](bool value) { m_board->setRelaxed(value); });
 	relaxedAction->setCheckable(true);
 	gameMenu->addSeparator();
-	gameMenu->addAction("E&xit", qApp, SLOT(quit()));
+	gameMenu->addAction("Exit", QKeySequence(QKeySequence(Qt::ALT | Qt::Key_X)), qApp, SLOT(quit()));
 
-	auto* viewMenu = new QMenu("View");
-	auto* fullscreenAction = viewMenu->addAction("Fullscreen", QKeySequence(QKeySequence::FullScreen), this, [this]{ this->isFullScreen() ? this->showNormal() : this->showFullScreen(); });
+	auto* viewMenu		   = new QMenu("View");
+	auto* fullscreenAction = viewMenu->addAction("Fullscreen", QKeySequence(QKeySequence::FullScreen), this,
+												 [this] { this->isFullScreen() ? this->showNormal() : this->showFullScreen(); });
 	fullscreenAction->setCheckable(true);
 
 	menuBar()->addMenu(gameMenu);
@@ -70,7 +72,7 @@ void MainWindow::newGame()
 	endGame();
 
 	// generate random game number
-	std::random_device randomDevice;
+	std::random_device							randomDevice;
 	std::uniform_int_distribution<unsigned int> gameNumberDistribution(1'000'000, 9'999'999);
 	m_gameNumber = gameNumberDistribution(randomDevice);
 
@@ -78,12 +80,11 @@ void MainWindow::newGame()
 	m_board->dealCards(m_gameNumber);
 }
 
-
 void MainWindow::selectGame()
 {
-	bool ok = false;
-	m_gameNumber = QInputDialog::getInt(this, "Select Game #", "Game #:",m_gameNumber,1'000'000, 9'999'999, 1, &ok);
-	if(ok)
+	bool ok		 = false;
+	m_gameNumber = QInputDialog::getInt(this, "Select Game #", "Game #:", m_gameNumber, 1'000'000, 9'999'999, 1, &ok);
+	if (ok)
 	{
 		endGame();
 		m_board->dealCards(m_gameNumber);

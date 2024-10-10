@@ -30,7 +30,9 @@ add_executable(${PROJECT_NAME}
                boardscene.cpp
                move.cpp
                move.h
-               )
+		Button.cpp
+		Button.h
+)
 
 # Add header files (optional, but helps IDEs like CLion)
 target_sources(${PROJECT_NAME} PRIVATE
