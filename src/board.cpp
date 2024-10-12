@@ -25,9 +25,11 @@
 
 #include <QGraphicsItem>
 #include <QGraphicsView>
+#include <QInputDialog>
 #include <QPointF>
 
 #include <thread>
+#include <random>
 
 #include "Button.h"
 
@@ -105,10 +107,17 @@ Board::Board()
 
 	auto* newGameButton = new Button();
 	newGameButton->setText("New Game");
-//	connect(newGameButton, &Button::clicked, this, &Board::);
+	connect(newGameButton, &Button::clicked, this, &Board::newGame);
 
 	mNewGameProxy = mScene->addWidget(newGameButton);
-	mNewGameProxy->setPos(QPointF(2 * SPACING + CardWidget::WIDTH / 2, mScene->height() - newGameButton->height() - SPACING));
+	mNewGameProxy->setPos(QPointF(2.5 * SPACING + CardWidget::WIDTH / 2, mScene->height() - newGameButton->height() - SPACING));
+
+	auto* restartButton = new Button();
+	restartButton->setText("Restart");
+	connect(restartButton, &Button::clicked, this, &Board::restartGame);
+
+	mRestartProxy = mScene->addWidget(restartButton);
+	mRestartProxy->setPos(QPointF(3.5 * SPACING + 1.5 * CardWidget::WIDTH, mScene->height() - restartButton->height() - SPACING));
 
 	auto* gameNumberLabel = new QLabel("Game #: 0");
 	gameNumberLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
@@ -418,4 +427,55 @@ void Board::setRelaxed(bool value)
 bool Board::isRelaxed() const noexcept
 {
 	return mRelaxed;
+}
+
+/*!
+ * \brief Start a new game
+ */
+void Board::newGame()
+{
+	QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+
+	// finish any ongoing game
+	endGame();
+
+	// generate random game number
+	std::random_device							randomDevice;
+	std::uniform_int_distribution<unsigned int> gameNumberDistribution(1'000'000, 9'999'999);
+	mGameNumber = gameNumberDistribution(randomDevice);
+
+	// deal the cards
+	this->dealCards(mGameNumber);
+
+	QGuiApplication::restoreOverrideCursor();
+}
+
+void Board::selectGame()
+{
+	bool ok		 = false;
+	mGameNumber = QInputDialog::getInt(mBoardWidget, "Select Game #", "Game #:", mGameNumber, 1'000'000, 9'999'999, 1, &ok);
+	if (ok)
+	{
+		QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+		endGame();
+		this->dealCards(mGameNumber);
+		QGuiApplication::restoreOverrideCursor();
+	}
+}
+
+/// @brief restart the current game
+void Board::restartGame()
+{
+	QGuiApplication::setOverrideCursor(Qt::WaitCursor);
+	endGame();
+	this->dealCards(mGameNumber);
+	QGuiApplication::restoreOverrideCursor();
+}
+
+/*!
+ * \brief Triggers the end of a game
+ */
+void Board::endGame()
+{
+	this->collectCards();
 }

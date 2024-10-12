@@ -32,14 +32,6 @@ public:
 
 	explicit MainWindow(QWidget* parent = nullptr);
 
-signals:
-
-public slots:
-	void newGame();
-	void selectGame();
-	void restartGame();
-	void endGame();
-
 protected:
 
 	unsigned int m_gameNumber = 0;

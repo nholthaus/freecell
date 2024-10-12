@@ -66,6 +66,12 @@ public:
 	QWidget* getBoardWidget();
 
 public slots:
+
+	void newGame();
+	void selectGame();
+	void restartGame();
+	void endGame();
+
 	bool tryAutomaticAceMove(Card* card = nullptr);
 	void onCardMoved(Move move);
 	void onUndo();
@@ -91,6 +97,7 @@ protected:
 	std::deque<Move> mRedoMoves;
 
 	QGraphicsProxyWidget* mNewGameProxy = nullptr;
+	QGraphicsProxyWidget* mRestartProxy = nullptr;
 	QGraphicsProxyWidget* mGameNumberProxy = nullptr;
 	QGraphicsProxyWidget* mUndoProxy = nullptr;
 

@@ -23,7 +23,6 @@
 #include <QMenuBar>
 #include <QStyle>
 #include <QToolTip>
-#include <random>
 
 /*!
  * \brief Constructor
@@ -40,9 +39,9 @@ MainWindow::MainWindow(QWidget* parent)
 	setCentralWidget(m_board->getBoardWidget());
 
 	auto* gameMenu = new QMenu("Game");
-	gameMenu->addAction(QIcon(":/icons/freecell_ico_white"), "New Game", Qt::Key_F2, this, SLOT(newGame()));
-	gameMenu->addAction("Select Game...", Qt::Key_F4, this, SLOT(selectGame()));
-	gameMenu->addAction("Restart Game", Qt::Key_F5, this, SLOT(restartGame()));
+	gameMenu->addAction(QIcon(":/icons/freecell_ico_white"), "New Game", Qt::Key_F2, m_board, &Board::newGame);
+	gameMenu->addAction("Select Game...", Qt::Key_F4, m_board, &Board::selectGame);
+	gameMenu->addAction("Restart Game", Qt::Key_F5, m_board, &Board::restartGame);
 	gameMenu->addSeparator();
 	gameMenu->addAction(QIcon(":/icons/undo"), "Undo Last Move", QKeySequence(QKeySequence::Undo), m_board, &Board::onUndo, Qt::QueuedConnection);
 	gameMenu->addAction(QIcon(":/icons/redo"),"Redo Last Move", QKeySequence(QKeySequence::Redo), m_board, &Board::onRedo, Qt::QueuedConnection);
@@ -50,7 +49,7 @@ MainWindow::MainWindow(QWidget* parent)
 	auto* relaxedAction = gameMenu->addAction("Relaxed Mode", QKeySequence(Qt::ALT | Qt::Key_R), this, [this](bool value) { m_board->setRelaxed(value); });
 	relaxedAction->setCheckable(true);
 	gameMenu->addSeparator();
-	gameMenu->addAction("Exit", QKeySequence(QKeySequence(Qt::ALT | Qt::Key_X)), qApp, SLOT(quit()));
+	gameMenu->addAction("Exit", QKeySequence(QKeySequence(Qt::ALT | Qt::Key_X)), QGuiApplication::instance(), SLOT(quit()));
 
 	auto* viewMenu		   = new QMenu("View");
 	auto* fullscreenAction = viewMenu->addAction("Fullscreen", QKeySequence(QKeySequence::FullScreen), this,
@@ -60,48 +59,5 @@ MainWindow::MainWindow(QWidget* parent)
 	menuBar()->addMenu(gameMenu);
 	menuBar()->addMenu(viewMenu);
 
-	newGame();
-}
-
-/*!
- * \brief Start a new game
- */
-void MainWindow::newGame()
-{
-	// finish any ongoing game
-	endGame();
-
-	// generate random game number
-	std::random_device							randomDevice;
-	std::uniform_int_distribution<unsigned int> gameNumberDistribution(1'000'000, 9'999'999);
-	m_gameNumber = gameNumberDistribution(randomDevice);
-
-	// deal the cards
-	m_board->dealCards(m_gameNumber);
-}
-
-void MainWindow::selectGame()
-{
-	bool ok		 = false;
-	m_gameNumber = QInputDialog::getInt(this, "Select Game #", "Game #:", m_gameNumber, 1'000'000, 9'999'999, 1, &ok);
-	if (ok)
-	{
-		endGame();
-		m_board->dealCards(m_gameNumber);
-	}
-}
-
-/// @brief restart the current game
-void MainWindow::restartGame()
-{
-	endGame();
-	m_board->dealCards(m_gameNumber);
-}
-
-/*!
- * \brief Triggers the end of a game
- */
-void MainWindow::endGame()
-{
-	m_board->collectCards();
+	m_board->newGame();
 }
