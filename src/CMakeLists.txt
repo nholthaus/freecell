@@ -32,6 +32,10 @@ add_executable(${PROJECT_NAME}
                move.h
 		Button.cpp
 		Button.h
+		Label.cpp
+		Label.h
+		TimerLabel.cpp
+		TimerLabel.h
 )
 
 # Add header files (optional, but helps IDEs like CLion)

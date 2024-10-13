@@ -27,11 +27,13 @@
 #include <QGraphicsView>
 #include <QInputDialog>
 #include <QPointF>
+#include <QTimer>
 
-#include <thread>
 #include <random>
+#include <thread>
 
 #include "Button.h"
+#include "timerLabel.h"
 
 using namespace std::chrono_literals;
 
@@ -119,12 +121,19 @@ Board::Board()
 	mRestartProxy = mScene->addWidget(restartButton);
 	mRestartProxy->setPos(QPointF(3.5 * SPACING + 1.5 * CardWidget::WIDTH, mScene->height() - restartButton->height() - SPACING));
 
-	auto* gameNumberLabel = new QLabel("Game #: 0");
-	gameNumberLabel->setAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-	gameNumberLabel->setFixedWidth(2 * CardWidget::WIDTH);
-	gameNumberLabel->setFixedHeight(46);
-	gameNumberLabel->setStyleSheet("color: rgba(255, 255, 255, 64); background-color: rgba(0, 100, 0, 25); font: 'Bookman Old Style' bold; font-size: 24px; "
-								   "border: 6px solid rgba(0, 100, 0, 255); border-radius: 15px");
+	mGameTimer = new QTimer;
+	mGameTimer->setInterval(1000);
+
+	auto* timerLabel = new TimerLabel();
+	timerLabel->setTime(0);
+	connect(mGameTimer, &QTimer::timeout, this, [=] { timerLabel->setTime(++mGameTime); });
+
+	mTimerProxy = mScene->addWidget(timerLabel);
+	mTimerProxy->setPos(QPointF(4.5 * SPACING + 2.5 * CardWidget::WIDTH, mScene->height() - restartButton->height() - SPACING));
+
+	auto* gameNumberLabel = new Label();
+	gameNumberLabel->setText("Game #: 0");
+	gameNumberLabel->setFixedWidth(2 * CardWidget::WIDTH + SPACING);
 
 	mGameNumberProxy = mScene->addWidget(gameNumberLabel);
 	mGameNumberProxy->setPos(QPointF(mScene->width() / 2 - gameNumberLabel->width() / 2, mScene->height() - gameNumberLabel->height() - SPACING));
@@ -330,9 +339,9 @@ void Board::onCardMoved(Move move)
 {
 	mUndoMoves.push_back(move);
 	while (tryAutomaticAceMove(nullptr))
-	{
-		std::this_thread::sleep_for(750ms);
-	};
+		;
+	if (!mGameTimer->isActive())
+		mGameTimer->start();
 }
 
 void Board::onUndo()
@@ -450,9 +459,12 @@ void Board::newGame()
 	QGuiApplication::restoreOverrideCursor();
 }
 
+/**
+ * Select a specific game number to play
+ */
 void Board::selectGame()
 {
-	bool ok		 = false;
+	bool ok		= false;
 	mGameNumber = QInputDialog::getInt(mBoardWidget, "Select Game #", "Game #:", mGameNumber, 1'000'000, 9'999'999, 1, &ok);
 	if (ok)
 	{
@@ -478,4 +490,14 @@ void Board::restartGame()
 void Board::endGame()
 {
 	this->collectCards();
+	resetGameTime();
+}
+
+void Board::resetGameTime()
+{
+	mGameTimer->stop();
+	mGameTime = 0;
+	if (mTimerProxy)
+		if (auto* timerLabel = dynamic_cast<TimerLabel*>(mTimerProxy->widget()); timerLabel)
+			timerLabel->setTime(0);
 }

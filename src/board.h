@@ -72,6 +72,8 @@ public slots:
 	void restartGame();
 	void endGame();
 
+	void resetGameTime();
+
 	bool tryAutomaticAceMove(Card* card = nullptr);
 	void onCardMoved(Move move);
 	void onUndo();
@@ -96,10 +98,14 @@ protected:
 	std::deque<Move> mUndoMoves;
 	std::deque<Move> mRedoMoves;
 
-	QGraphicsProxyWidget* mNewGameProxy = nullptr;
-	QGraphicsProxyWidget* mRestartProxy = nullptr;
+	QTimer* mGameTimer = nullptr;
+	int		mGameTime  = 0;
+
+	QGraphicsProxyWidget* mNewGameProxy	   = nullptr;
+	QGraphicsProxyWidget* mRestartProxy	   = nullptr;
+	QGraphicsProxyWidget* mTimerProxy	   = nullptr;
 	QGraphicsProxyWidget* mGameNumberProxy = nullptr;
-	QGraphicsProxyWidget* mUndoProxy = nullptr;
+	QGraphicsProxyWidget* mUndoProxy	   = nullptr;
 
 	bool		 mRelaxed	 = false;
 	unsigned int mGameNumber = 0;
