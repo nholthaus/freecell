@@ -74,10 +74,17 @@ public slots:
 
 	void resetGameTime();
 
+	bool checkVictory() const;
 	bool tryAutomaticAceMove(Card* card = nullptr);
+
 	void onCardMoved(Move move);
 	void onUndo();
 	void onRedo();
+	void onVictory();
+
+protected:
+
+	void victoryAnimation();
 
 protected:
 
@@ -107,6 +114,7 @@ protected:
 	QGraphicsProxyWidget* mGameNumberProxy = nullptr;
 	QGraphicsProxyWidget* mUndoProxy	   = nullptr;
 
+	bool		 m_victory	 = false;
 	bool		 mRelaxed	 = false;
 	unsigned int mGameNumber = 0;
 };

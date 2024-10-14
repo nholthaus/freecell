@@ -364,7 +364,11 @@ void Card::setZIndex(int index, bool cascade)
 
 void Card::resetZIndex()
 {
-	setZIndex(m_parent->getZIndex() + 1);
+	int parentZIndex = 0;
+	if(m_parent)
+		parentZIndex = m_parent->getZIndex();
+
+	setZIndex(parentZIndex + 1);
 }
 
 /*!

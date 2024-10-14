@@ -163,7 +163,7 @@ void Board::dealCards(unsigned int gameNumber)
 	int	  i = 0, col = 0;
 
 	mDeck->build(this); // NMH: TODO don't rebuild the deck unless restarting the same game
-	mDeck->shuffle(gameNumber);
+						//	mDeck->shuffle(gameNumber);
 
 	mUndoMoves.clear();
 	mRedoMoves.clear();
@@ -190,7 +190,7 @@ void Board::dealCards(unsigned int gameNumber)
 		mCards.push_back(card);
 		card->show();
 
-		connect(card, &Card::moved, this, &Board::onCardMoved);
+		connect(card, &Card::moved, this, &Board::onCardMoved, Qt::QueuedConnection);
 	}
 }
 
@@ -337,11 +337,21 @@ bool Board::tryAutomaticAceMove(Card* card)
 
 void Board::onCardMoved(Move move)
 {
-	mUndoMoves.push_back(move);
-	while (tryAutomaticAceMove(nullptr))
-		;
-	if (!mGameTimer->isActive())
-		mGameTimer->start();
+	if (!m_victory)
+	{
+		mUndoMoves.push_back(move);
+		while (tryAutomaticAceMove(nullptr))
+		{
+		};
+		if (!mGameTimer->isActive())
+			mGameTimer->start();
+
+		if (checkVictory())
+		{
+			m_victory = true;
+			QTimer::singleShot(1000, this, &Board::onVictory);
+		}
+	}
 }
 
 void Board::onUndo()
@@ -491,6 +501,7 @@ void Board::endGame()
 {
 	this->collectCards();
 	resetGameTime();
+	m_victory = false;
 }
 
 void Board::resetGameTime()
@@ -500,4 +511,60 @@ void Board::resetGameTime()
 	if (mTimerProxy)
 		if (auto* timerLabel = dynamic_cast<TimerLabel*>(mTimerProxy->widget()); timerLabel)
 			timerLabel->setTime(0);
+}
+
+bool Board::checkVictory() const
+{
+	for (auto* card : mCards)
+		if (!card->isOnAceSpot())
+			return false;
+
+	return true;
+}
+
+void Board::onVictory()
+{
+	mGameTimer->stop();
+	victoryAnimation();
+}
+
+void Board::victoryAnimation()
+{
+	std::random_device				   rd;
+	std::mt19937					   generator(rd());
+	std::normal_distribution<float>	   distX(mScene->width() * 0.5, mScene->width() / 3);
+	std::normal_distribution<float>	   distY(mScene->height() * 0.35, mScene->width() / 6);
+	std::uniform_int_distribution<int> distAngle(-180, 180);
+
+	for (auto* card : mCards)
+	{
+		card->blockSignals(true);
+		card->setOnAceSpot(false);
+		card->setParent(nullptr);
+		card->blockSignals(false);
+	}
+
+	int time = 15;
+	for (auto* card : mCards)
+	{
+		int x	  = -CardWidget::WIDTH;
+		int y	  = -CardWidget::HEIGHT;
+		int angle = distAngle(generator);
+
+		while (x < -CardWidget::WIDTH / 2 || x > (mScene->width() + CardWidget::WIDTH / 2))
+			x = distX(generator);
+
+		while (y < -CardWidget::HEIGHT / 2 || y > (mScene->height() - 1.5 * CardWidget::HEIGHT))
+			y = distY(generator);
+
+		time += 10;
+		QTimer::singleShot(time, this,
+						   [=]
+						   {
+							   card->blockSignals(true);
+							   QPoint point(x, y);
+							   card->animatePosition(point);
+							   card->blockSignals(false);
+						   });
+	}
 }
