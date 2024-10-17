@@ -123,6 +123,9 @@ bool Card::canStackCard(Card* card)
  */
 bool Card::isStackable()
 {
+	if(!m_parent)
+		return false;
+
 	return m_parent->isStackable();
 }
 
@@ -132,7 +135,7 @@ bool Card::isStackable()
  */
 bool Card::isMovable()
 {
-	if (m_isOnAceSpot)
+	if (m_isOnAceSpot || m_isScattered)
 	{
 		return false;
 	}
@@ -294,6 +297,15 @@ void Card::animatePosition(QPoint pos)
 	}
 }
 
+void Card::animateRotation(int angle)
+{
+	QPropertyAnimation* animation = new QPropertyAnimation(m_proxy, "rotation");
+	animation->setDuration(100);
+	animation->setStartValue(0);
+	animation->setEndValue(angle);
+	animation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
 /*!
  * \brief Change the position of the card and its children to pos
  * \param pos The new position
@@ -314,6 +326,9 @@ void Card::setPosition(QPoint pos)
  */
 void Card::updatePosition(bool animate)
 {
+	if(!m_parent)
+		return;
+
 	if (animate)
 	{
 		animatePosition(m_parent->getChildPosition());
@@ -418,4 +433,25 @@ bool Card::isSelected()
 void Card::automaticMove()
 {
 	m_board->automaticMove(this);
+}
+
+CardProxy* Card::proxy()
+{
+	return m_proxy;
+}
+
+void Card::scatter(QPoint point, int angle)
+{
+	blockSignals(true);
+	setOnAceSpot(false);
+	setParent(nullptr);
+	animatePosition(point);
+	animateRotation(angle);
+	m_isScattered = true;
+	blockSignals(false);
+}
+
+void Card::setScattered(bool scattered)
+{
+	m_isScattered = scattered;
 }

@@ -89,6 +89,7 @@ Card* Deck::drawCard()
  */
 void Deck::pushCard(Card* card)
 {
+	card->setScattered(false);
 	mCards.push_back(card);
 }
 

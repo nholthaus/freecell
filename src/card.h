@@ -18,8 +18,8 @@
 #ifndef CARD_H
 #define CARD_H
 
-#include <QPoint>
 #include <QMetaEnum>
+#include <QPoint>
 
 #include "abstractcardholder.h"
 #include "move.h"
@@ -88,6 +88,7 @@ public:
 	QPoint getPosition();
 	QPoint getChildPosition() override;
 	void   animatePosition(QPoint pos);
+	void   animateRotation(int angle);
 	void   setPosition(QPoint pos);
 	void   updatePosition(bool animate = false);
 	int	   getTopZIndex();
@@ -99,26 +100,31 @@ public:
 	void select() override;
 	bool isSelected();
 	void setSelected(bool selected);
+	void setScattered(bool scattered);
 	void automaticMove();
+
+	CardProxy* proxy();
 
 signals:
 	void moved(Move move);
 
 public slots:
 	void resetZIndex();
+	void scatter(QPoint point, int angle);
 
 protected:
 
 	Suit  m_suit;
 	Value m_value;
 
-	Board*		m_board;
-	CardWidget* m_widget;
-	CardProxy*	m_proxy;
-
 	QPoint m_position;
 
-	bool m_isOnAceSpot;
+	Board*		m_board = nullptr;
+	CardWidget* m_widget = nullptr;
+	CardProxy*	m_proxy = nullptr;
+
+	bool m_isOnAceSpot = false;
+	bool m_isScattered = false;
 };
 
 inline Card::Value& operator++(Card::Value& value)

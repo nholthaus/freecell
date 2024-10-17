@@ -348,8 +348,7 @@ void Board::onCardMoved(Move move)
 
 		if (checkVictory())
 		{
-			m_victory = true;
-			QTimer::singleShot(1000, this, &Board::onVictory);
+			onVictory();
 		}
 	}
 }
@@ -525,7 +524,8 @@ bool Board::checkVictory() const
 void Board::onVictory()
 {
 	mGameTimer->stop();
-	victoryAnimation();
+	m_victory = true;
+	QTimer::singleShot(1000, this, &Board::victoryAnimation);
 }
 
 void Board::victoryAnimation()
@@ -535,14 +535,6 @@ void Board::victoryAnimation()
 	std::normal_distribution<float>	   distX(mScene->width() * 0.5, mScene->width() / 3);
 	std::normal_distribution<float>	   distY(mScene->height() * 0.35, mScene->width() / 6);
 	std::uniform_int_distribution<int> distAngle(-180, 180);
-
-	for (auto* card : mCards)
-	{
-		card->blockSignals(true);
-		card->setOnAceSpot(false);
-		card->setParent(nullptr);
-		card->blockSignals(false);
-	}
 
 	int time = 15;
 	for (auto* card : mCards)
@@ -557,14 +549,11 @@ void Board::victoryAnimation()
 		while (y < -CardWidget::HEIGHT / 2 || y > (mScene->height() - 1.5 * CardWidget::HEIGHT))
 			y = distY(generator);
 
-		time += 10;
+		time += 15;
 		QTimer::singleShot(time, this,
 						   [=]
 						   {
-							   card->blockSignals(true);
-							   QPoint point(x, y);
-							   card->animatePosition(point);
-							   card->blockSignals(false);
+							   card->scatter({x,y}, angle);
 						   });
 	}
 }
