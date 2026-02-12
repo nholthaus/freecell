@@ -72,10 +72,28 @@ include(InstallRequiredSystemLibraries)
 if (WIN32)
 	include(windeployqt)
 	windeployqt(${PROJECT_NAME})
-	qt_generate_deploy_app_script(
-			TARGET ${PROJECT_NAME}
-			OUTPUT_SCRIPT deploy_script
-			NO_UNSUPPORTED_PLATFORM_ERROR
+	install(
+			DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin/"
+			DESTINATION "${CMAKE_INSTALL_BINDIR}"
+			USE_SOURCE_PERMISSIONS
 			)
-	install(SCRIPT ${deploy_script})
 endif (WIN32)
+
+# ----------------------------
+# CPack
+# ----------------------------
+
+set(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_VENDOR "Menari Softworks")
+set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
+set(CPACK_RESOURCE_FILE_README ${CMAKE_SOURCE_DIR}/README.md)
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "${CPACK_PACKAGE_NAME}")
+
+# Build directory output folder for packages
+set(CPACK_OUTPUT_FILE_PREFIX "${CMAKE_BINARY_DIR}")
+
+# Easy default generator
+set(CPACK_GENERATOR "NSIS")
+
+include(CPack)
